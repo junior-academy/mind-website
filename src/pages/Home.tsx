@@ -689,13 +689,9 @@ export default function Home({ targetSection }: HomeProps) {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
               <p>
-                In M.I.N.D., <strong>Functional Electrical Stimulation (FES)</strong> is the bridge between intention and movement. When a
-                user intends a movement and assisted movement is produced, repeated intention-action loops can support
-                neuroplastic rehabilitation pathways.
-              </p>
-              <p>
-                In the M.I.N.D. system, <strong>Functional Electrical Stimulation (FES)</strong> is the bridge between intention and movement.
-                By pairing intent-driven movement with repeated rehab loops, we aim to support neuroplasticity.
+                In M.I.N.D., <strong>Functional Electrical Stimulation (FES)</strong> bridges intention and movement: when a user imagines a
+                movement and assisted motion occurs, repeated intention-action loops can support <strong>activity-dependent neuroplasticity</strong>
+                for rehabilitation.
               </p>
               <p>
                 Our design prioritizes <strong>stability</strong> and <strong>safety</strong>: when the system is uncertain, it prefers <strong>HOLD</strong> rather than
@@ -719,6 +715,31 @@ export default function Home({ targetSection }: HomeProps) {
               We report <strong>coverage</strong> and <strong>abstention</strong> explicitly so benefits and tradeoffs can be assessed fairly across users.
               Current barriers include device cost, setup burden, and specialist facilitation requirements, which shape how
               quickly communities can benefit.
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Why stability matters (Noland Arbaugh case context)</CardTitle>
+              <CardDescription>Real-world motivation for reliability under changing neural signals.</CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground space-y-3">
+              <p>
+                In January 2024, Noland Arbaugh became the first human recipient of Neuralink&apos;s implant and initially regained
+                cursor control. Public reporting later described substantial thread retraction that reduced performance over time.
+              </p>
+              <p>
+                Our takeaway is not about one company; it is about a core engineering reality: <strong>long-term stability</strong> is hard.
+                M.I.N.D. addresses that challenge with a <strong>non-invasive</strong>, safety-constrained ensemble pipeline designed to avoid
+                unsafe guesses and remain usable across noisy signals.
+              </p>
+              <div className="rounded-lg border p-3">
+                <strong className="text-foreground">Population fit under one classifier core:</strong> M.I.N.D. supports
+                {" "}<strong>(1)</strong> people with paralysis and intact limbs via FES and {" "}
+                <strong>(2)</strong> people with limb loss via prosthetic output. The classifier stays the same; the output layer changes.
+              </div>
             </CardContent>
           </Card>
         </div>
