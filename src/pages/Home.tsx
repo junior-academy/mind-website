@@ -221,6 +221,12 @@ export default function Home({ targetSection }: HomeProps) {
         toggle: "higher jitter risk",
       },
       {
+        condition: "Ensemble + safety gate",
+        wrongFire: "constrained by alpha",
+        safeFire: "optimized under alpha (no debounce)",
+        toggle: "moderate jitter risk near threshold",
+      },
+      {
         condition: "Ensemble + debounced safety layer (alpha = 0.05)",
         wrongFire: "explicitly constrained",
         safeFire: "maximized under constraint",
@@ -257,27 +263,23 @@ export default function Home({ targetSection }: HomeProps) {
   const externalValidationPlanRows = useMemo(
     () => [
       {
-        step: "Clinician outreach packet finalized (one-page brief + dashboard link + safety notes)",
-        owner: "Kevin Zhou + Ishani Singh",
-        target: "April 29, 2026",
+        sequence: "1",
+        step: "Finalize clinician outreach packet (one-page brief + dashboard link + safety notes)",
         evidence: "Packet PDF + outreach email template in repo/docs",
       },
       {
-        step: "First clinician feedback call (structured 20-minute interview)",
-        owner: "Mayu Kanai + Habiba Hisham",
-        target: "May 6, 2026",
+        sequence: "2",
+        step: "Run first clinician feedback call (structured 20-minute interview)",
         evidence: "Meeting notes + action items with timestamp",
       },
       {
-        step: "Lab/rehab org pilot-interest requests sent (minimum 3 targets)",
-        owner: "Mohammad Yamout + Joshua Zhuravskiy",
-        target: "May 10, 2026",
+        sequence: "3",
+        step: "Send lab/rehab pilot-interest requests (minimum 3 targets)",
         evidence: "Outreach log with recipient + status",
       },
       {
-        step: "External validation checkpoint published",
-        owner: "Entire team (mentor review)",
-        target: "May 17, 2026",
+        sequence: "4",
+        step: "Publish external validation checkpoint",
         evidence: "Public status slide with responses received / pending / declined",
       },
     ],
@@ -322,23 +324,34 @@ export default function Home({ targetSection }: HomeProps) {
         ci: "[-0.119, 0.145]",
         p: "0.830",
       },
+    ],
+    [],
+  );
+
+  const classifierLockedThresholdModelStats = useMemo(
+    () => lockedThresholdModelStats.filter((row) => !row.model.includes("debounced")),
+    [lockedThresholdModelStats],
+  );
+
+  const debouncedExperimentalModelStats = useMemo(
+    () => [
       {
-        model: "LDA_SVM_RF_global_debounced",
-        n: "6",
-        coverage: "0.039",
-        confAcc: "0.335",
-        delta: "-0.372",
-        ci: "[-0.575, -0.170]",
-        p: "0.005",
+        model: "LDA_SVM_baseline_subject_debounced (experimental safety feature)",
+        n: "policy sample",
+        coverage: "0.024",
+        confAcc: "0.283",
+        delta: "NA",
+        ci: "NA",
+        p: "NA",
       },
       {
-        model: "LDA_SVM_baseline_subject_debounced",
-        n: "9",
-        coverage: "0.249",
-        confAcc: "0.283",
-        delta: "-0.345",
-        ci: "[-0.503, -0.187]",
-        p: "0.001",
+        model: "LDA_SVM_RF_global_debounced (experimental safety feature)",
+        n: "policy sample",
+        coverage: "0.039",
+        confAcc: "0.335",
+        delta: "NA",
+        ci: "NA",
+        p: "NA",
       },
     ],
     [],
@@ -418,15 +431,15 @@ export default function Home({ targetSection }: HomeProps) {
     () => [
       {
         item: "Prototype stack",
-        value: "High (OpenBCI + SBC + actuator hardware); exact BOM maintained in hardware doc.",
+        value: "$715-$900 total (Pi 4: $55-$100, Ganglion: $624.99, TENS: $35-$100, servos: ~$5-$15 each; 5-servo example).",
       },
       {
         item: "Clinic pilot cost",
-        value: "Lower per-user through shared station model and scheduled supervised sessions.",
+        value: "Pilot target: ~$15-$40/session for equipment amortization + consumables (clinician labor tracked separately).",
       },
       {
         item: "Cost-down path",
-        value: "Benchmark lower-cost EEG options + shared-device deployment + setup automation.",
+        value: "Cost-down target: move toward sub-$500 using lower-cost EEG options, shared devices, and setup automation.",
       },
     ],
     [],
@@ -667,7 +680,7 @@ export default function Home({ targetSection }: HomeProps) {
         id="slide-2"
         eyebrow="Slide 2"
         title="Problem + Community Impact"
-        subtitle="Paralysis and motor impairment can reduce independence; rehab access is often limited. In assistive control, unsafe false activations can cause harm—so safety is a first-class requirement, not an afterthought."
+        subtitle="Rehab access is limited, and unsafe false activations can cause harm. Safety is a first-class requirement."
       >
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <Card className="lg:col-span-2">
@@ -680,9 +693,7 @@ export default function Home({ targetSection }: HomeProps) {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
               <p>
-                In M.I.N.D., <strong>Functional Electrical Stimulation (FES)</strong> bridges intention and movement: when a user imagines a
-                movement and assisted motion occurs, repeated intention-action loops can support <strong>activity-dependent neuroplasticity</strong>
-                for rehabilitation.
+                <strong>FES</strong> bridges intention and movement: repeated intention-action loops can support <strong>activity-dependent neuroplasticity</strong>.
               </p>
               <p>
                 Our design prioritizes <strong>stability</strong> and <strong>safety</strong>: when the system is uncertain, it prefers <strong>HOLD</strong> rather than
@@ -703,9 +714,7 @@ export default function Home({ targetSection }: HomeProps) {
               <CardDescription>Access gaps exist due to equipment, facilitation, and expertise.</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              We report <strong>coverage</strong> and <strong>abstention</strong> explicitly so benefits and tradeoffs can be assessed fairly across users.
-              Current barriers include device cost, setup burden, and specialist facilitation requirements, which shape how
-              quickly communities can benefit.
+              We report <strong>coverage</strong> and <strong>abstention</strong> so tradeoffs are explicit. Key barriers remain device cost, setup burden, and specialist facilitation.
             </CardContent>
           </Card>
         </div>
@@ -718,13 +727,10 @@ export default function Home({ targetSection }: HomeProps) {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
               <p>
-                In January 2024, Noland Arbaugh became the first human recipient of Neuralink&apos;s implant and initially regained
-                cursor control. Public reporting later described substantial thread retraction that reduced performance over time.
+                In January 2024, Noland Arbaugh became the first human Neuralink recipient and initially regained cursor control; later reporting described thread retraction and reduced performance.
               </p>
               <p>
-                Our takeaway is not about one company; it is about a core engineering reality: <strong>long-term stability</strong> is hard.
-                M.I.N.D. addresses that challenge with a <strong>non-invasive</strong>, safety-constrained ensemble pipeline designed to avoid
-                unsafe guesses and remain usable across noisy signals.
+                Our takeaway is broader: <strong>long-term stability</strong> is hard. M.I.N.D. addresses this with a <strong>non-invasive</strong>, safety-constrained ensemble pipeline.
               </p>
               <div className="rounded-lg border p-3">
                 <strong className="text-foreground">Population fit under one classifier core:</strong> M.I.N.D. supports
@@ -825,11 +831,11 @@ export default function Home({ targetSection }: HomeProps) {
               <CardDescription>Sources are separated into literature and dataset sources for quick review.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
-              <div className="space-y-3">
-                <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  <Mono>Literature sources</Mono>
-                </div>
-                <div className="grid md:grid-cols-2 gap-3 text-sm">
+              <details open className="rounded-xl border bg-card/40 p-3">
+                <summary className="cursor-pointer text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  <Mono>Literature sources ({LITERATURE_SOURCES.length})</Mono>
+                </summary>
+                <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm">
                   {LITERATURE_SOURCES.map((s) => (
                     <a
                       key={s.u}
@@ -846,12 +852,12 @@ export default function Home({ targetSection }: HomeProps) {
                     </a>
                   ))}
                 </div>
-              </div>
-              <div className="space-y-3">
-                <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  <Mono>Data sources</Mono>
-                </div>
-                <div className="grid md:grid-cols-2 gap-3 text-sm">
+              </details>
+              <details open className="rounded-xl border bg-card/40 p-3">
+                <summary className="cursor-pointer text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  <Mono>Data sources ({DATA_SOURCES.length})</Mono>
+                </summary>
+                <div className="mt-3 grid md:grid-cols-2 gap-3 text-sm">
                   {DATA_SOURCES.map((s) => (
                     <a
                       key={s.u}
@@ -868,7 +874,7 @@ export default function Home({ targetSection }: HomeProps) {
                     </a>
                   ))}
                 </div>
-              </div>
+              </details>
             </CardContent>
           </Card>
 
@@ -1021,7 +1027,7 @@ export default function Home({ targetSection }: HomeProps) {
         id="slide-8"
         eyebrow="Slide 8"
         title="Methods Integrity"
-        subtitle="Data split, leakage prevention, locked threshold, and confirmatory vs exploratory boundaries."
+        subtitle="Data split, leakage prevention, locked threshold, and confirmatory/exploratory boundaries."
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card>
@@ -1089,12 +1095,9 @@ export default function Home({ targetSection }: HomeProps) {
               <div className="rounded-lg border p-3">
                 Exploratory-only sweep: <Mono>{"{0.55, 0.60, 0.65, 0.70, 0.75}"}</Mono>
               </div>
+              <div className="rounded-lg border p-3">Secondary optimized thresholds are transparency-only and not used for confirmatory hypothesis tests.</div>
               <div className="rounded-lg border p-3">
-                Secondary optimized threshold is reported for transparency only and is not used for hypothesis tests.
-              </div>
-              <div className="rounded-lg border p-3">
-                Levene variance check is reported at the locked threshold to test the variance claim boundary (not treated as
-                a post-hoc optimization target).
+                Levene variance check is reported at the locked threshold (not used as a post-hoc optimization target).
               </div>
             </CardContent>
           </Card>
@@ -1240,9 +1243,9 @@ export default function Home({ targetSection }: HomeProps) {
         <div className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>All models at locked threshold (t* = 0.60)</CardTitle>
+              <CardTitle>Classifier models at locked threshold (t* = 0.60)</CardTitle>
               <CardDescription>
-                Inferential summary from <Mono>stats_tests_confident_vs_best.csv</Mono> for every primary model family.
+                Inferential summary from <Mono>stats_tests_confident_vs_best.csv</Mono> for primary classifier families only.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1259,7 +1262,7 @@ export default function Home({ targetSection }: HomeProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {lockedThresholdModelStats.map((row) => (
+                  {classifierLockedThresholdModelStats.map((row) => (
                     <TableRow key={row.model}>
                       <TableCell className="font-medium">{row.model}</TableCell>
                       <TableCell>
@@ -1288,6 +1291,61 @@ export default function Home({ targetSection }: HomeProps) {
           </Card>
         </div>
 
+        <div className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Experimental debounced outcomes (reported transparently)</CardTitle>
+              <CardDescription>
+                These rows are experimental safety-feature outcomes and are not directly comparable to primary classifier results.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Model</TableHead>
+                    <TableHead>n</TableHead>
+                    <TableHead>Coverage</TableHead>
+                    <TableHead>Conf. Acc</TableHead>
+                    <TableHead>Delta</TableHead>
+                    <TableHead>Delta 95% CI</TableHead>
+                    <TableHead>p-value</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {debouncedExperimentalModelStats.map((row) => (
+                    <TableRow key={row.model}>
+                      <TableCell className="font-medium">{row.model}</TableCell>
+                      <TableCell>
+                        <Mono>{row.n}</Mono>
+                      </TableCell>
+                      <TableCell>
+                        <Mono>{row.coverage}</Mono>
+                      </TableCell>
+                      <TableCell>
+                        <Mono>{row.confAcc}</Mono>
+                      </TableCell>
+                      <TableCell>
+                        <Mono>{row.delta}</Mono>
+                      </TableCell>
+                      <TableCell>
+                        <Mono>{row.ci}</Mono>
+                      </TableCell>
+                      <TableCell>
+                        <Mono>{row.p}</Mono>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <div className="text-sm text-muted-foreground rounded-lg border p-3">
+                Debounced values above are aligned to the policy examples shown in Slide 13 and presented as experimental
+                safety-feature snapshots (<Mono>t_on/t_off/k-of-n</Mono>). They are reported for transparency, not as primary inferential endpoints.
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card>
             <CardHeader>
@@ -1312,21 +1370,17 @@ export default function Home({ targetSection }: HomeProps) {
           <Card>
             <CardHeader>
               <CardTitle>Coverage + latency scope note</CardTitle>
-              <CardDescription>
-                Why dashboard coverage percentages can differ, and what latency this report includes.
-              </CardDescription>
+              <CardDescription>Why coverage can differ, and what latency includes.</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
               <p>
-                Coverage values differ when the metric or model changes. In this slide we use classifier coverage from{" "}
+                Coverage differs by metric/model. Here we use classifier coverage from{" "}
                 <Mono>stats_tests_confident_vs_best.csv</Mono> for{" "}
                 <Mono>Ablation: LDA+SVM+RF (global)</Mono> at <Mono>t* = 0.60</Mono> (<Mono>0.464</Mono>). Debounced-controller
-                coverage uses a stricter FIRE/HOLD gate and is expected to be lower, and other ensemble variants can report
-                different coverage at the same threshold.
+                coverage uses a stricter FIRE/HOLD gate and is expected to be lower.
               </p>
               <p>
-                Reported latency is policy-compute latency only (software gate loop on saved probabilities). It does not include
-                EEG acquisition, wireless transport, or actuator hardware delays. Hardware-in-loop latency remains a Phase 1 KPI.
+                Reported latency is policy-compute only (software gate loop). It excludes EEG acquisition, wireless transport, and actuator delays.
               </p>
             </CardContent>
           </Card>
@@ -1458,7 +1512,7 @@ export default function Home({ targetSection }: HomeProps) {
 
               <Alert>
                 <AlertTitle>Non-PhysioNet external results</AlertTitle>
-                <AlertDescription className="whitespace-nowrap overflow-x-auto">
+                <AlertDescription>
                   BNCI2014_001 shows a strong signal at the locked threshold (<span className="inline"><Mono>p = 0.004</Mono></span>), while IIIa is also reported (<Mono>p = 0.183</Mono>) but remains underpowered (<Mono>n = 3</Mono>).
                 </AlertDescription>
               </Alert>
@@ -1573,7 +1627,7 @@ export default function Home({ targetSection }: HomeProps) {
               </p>
               <div className="rounded-lg border p-3">
                 <div className="font-medium text-foreground">User/co-designer quote status</div>
-                <div>No real interview quote has been collected yet. We will not fabricate quotes; this remains an open evidence task.</div>
+                <div>No real interview quote has been collected yet. We do not fabricate quotes; this remains an open evidence task with scheduled collection in Slide 17.</div>
               </div>
             </CardContent>
           </Card>
@@ -1585,13 +1639,13 @@ export default function Home({ targetSection }: HomeProps) {
         id="slide-13"
         eyebrow="Slide 13"
         title="Debounced Controller Metrics"
-        subtitle="Controller metrics below are safety/control metrics (not classification accuracy)."
+        subtitle="Experimental safety feature: controller metrics below are safety/control metrics (not classification accuracy)."
       >
         <Alert className="mb-4">
           <AlertTitle>Attempt outcome (reported transparently)</AlertTitle>
           <AlertDescription>
-            This debounced-controller attempt met the <strong>safety constraint</strong> (<Mono>wrong-fire &lt;= 0.05</Mono>)
-            but was <strong>too conservative</strong> for usability (low coverage and low safe-fire). This is treated as a
+            This debounced-controller (experimental safety feature) met the safety constraint(wrong-fire &lt;= 0.05)
+            but was too conservative for usability (low coverage and low safe-fire). This is treated as a
             tuning result, not a failure of the core novelty.
           </AlertDescription>
         </Alert>
@@ -1858,7 +1912,7 @@ export default function Home({ targetSection }: HomeProps) {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="print-hide">
             <CardHeader>
               <CardTitle>Adoption risks + mitigations</CardTitle>
               <CardDescription>What could block deployment and what we do about it.</CardDescription>
@@ -1899,7 +1953,7 @@ export default function Home({ targetSection }: HomeProps) {
                   ))}
                 </TableBody>
               </Table>
-              <Table className="mt-4">
+              <Table className="mt-4 print-hide">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Phase</TableHead>
@@ -1934,12 +1988,12 @@ export default function Home({ targetSection }: HomeProps) {
                 <ExternalPill label="Dashboard" url={LINKS.dashboard} />
                 <ExternalPill label="GitHub Repo" url={LINKS.githubRepo} />
               </div>
-              <div className="rounded-lg border p-3">Interest letters status: none received yet.</div>
+              <div className="rounded-lg border p-3">Interest letters status: none received yet. We do not fabricate letters; outreach status and dated collection plan are documented in Slide 17.</div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 print-hide">
           <Card>
             <CardHeader>
               <CardTitle>Live Dashboard Demo (Embedded)</CardTitle>
@@ -2014,7 +2068,7 @@ export default function Home({ targetSection }: HomeProps) {
               </ul>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="print-hide">
             <CardHeader>
               <CardTitle>Execution learnings (team operations)</CardTitle>
               <CardDescription>Milestone 3 process notes retained for final delivery quality.</CardDescription>
@@ -2035,27 +2089,25 @@ export default function Home({ targetSection }: HomeProps) {
         <div className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Next-step external validation plan (no fabricated artifacts)</CardTitle>
-              <CardDescription>Dated and owner-assigned plan replacing fake quotes/letters.</CardDescription>
+              <CardTitle>Future external validation plan (no fabricated artifacts)</CardTitle>
+              <CardDescription>Action-sequenced plan focused on verifiable evidence artifacts.</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>Sequence</TableHead>
                     <TableHead>Step</TableHead>
-                    <TableHead>Owner</TableHead>
-                    <TableHead>Target date</TableHead>
                     <TableHead>Evidence artifact</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {externalValidationPlanRows.map((row) => (
                     <TableRow key={row.step}>
-                      <TableCell className="font-medium">{row.step}</TableCell>
-                      <TableCell>{row.owner}</TableCell>
                       <TableCell>
-                        <Mono>{row.target}</Mono>
+                        <Mono>{row.sequence}</Mono>
                       </TableCell>
+                      <TableCell className="font-medium">{row.step}</TableCell>
                       <TableCell>{row.evidence}</TableCell>
                     </TableRow>
                   ))}
@@ -2092,7 +2144,7 @@ export default function Home({ targetSection }: HomeProps) {
             </div>
           </CardContent>
         </Card>
-        <Card className="mb-4">
+        <Card className="mb-4 print-hide">
           <CardHeader>
             <CardTitle>Final quality pass checklist</CardTitle>
             <CardDescription>Submission QC completed before export and rehearsal.</CardDescription>
@@ -2102,7 +2154,7 @@ export default function Home({ targetSection }: HomeProps) {
               <li>No <Mono>Pending</Mono> / <Mono>TBD</Mono> placeholders remain in judge-facing slides.</li>
               <li>Each slide has one headline sentence (subtitle) and one core decision message.</li>
               <li>Charts include axis context and sample size references (<Mono>n</Mono> labels in captions/tables).</li>
-              <li>Final PDF export route is available via Print / Save as PDF.</li>
+              <li>Final PDF download is available via the direct export link.</li>
               <li>Speaker transitions are scripted in Slide 19 for timed handoffs.</li>
             </ul>
           </CardContent>
@@ -2126,7 +2178,7 @@ export default function Home({ targetSection }: HomeProps) {
               </Alert>
 
               <div className="grid gap-3">
-                <div className="rounded-xl border p-3">
+                <div className="rounded-xl border p-3 print-hide">
                   <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                     <Mono>Literature sources</Mono>
                   </div>
@@ -2137,7 +2189,7 @@ export default function Home({ targetSection }: HomeProps) {
                   </div>
                 </div>
 
-                <div className="rounded-xl border p-3">
+                <div className="rounded-xl border p-3 print-hide">
                   <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                     <Mono>Data sources</Mono>
                   </div>
@@ -2182,13 +2234,15 @@ export default function Home({ targetSection }: HomeProps) {
           <Card>
             <CardHeader>
               <CardTitle>Print / export</CardTitle>
-              <CardDescription>Print-friendly view for review and archiving.</CardDescription>
+              <CardDescription>Download the finalized slide deck PDF.</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
-              <p>Tip: use your browser’s Print → “Save as PDF”.</p>
-              <Button variant="outline" onClick={() => window.print()} className="gap-2">
-                Print / Save as PDF
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              <p>Use the direct download below for the finalized version.</p>
+              <Button asChild variant="outline" className="gap-2">
+                <a href="/mind-pdf.pdf" download>
+                  Download Final PDF
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                </a>
               </Button>
             </CardContent>
           </Card>
@@ -2211,7 +2265,7 @@ export default function Home({ targetSection }: HomeProps) {
               <span className="font-medium text-foreground">Problem:</span> In assistive BCI control, <strong>unsafe false activations</strong> can harm users and reduce trust.
             </div>
             <div className="rounded-lg border p-3">
-              <span className="font-medium text-foreground">Innovation:</span> We add a <strong>model-agnostic safety-constrained debounced FIRE/HOLD layer</strong>, not just another classifier.
+              <span className="font-medium text-foreground">Innovation:</span> We add a <strong>safety-constrained threshold</strong> with an <strong>experimental debounced layer</strong>, not just another classifier.
             </div>
             <div className="rounded-lg border p-3">
               <span className="font-medium text-foreground">Evidence:</span> At locked threshold, ablation model shows <strong><Mono>delta +0.156</Mono></strong> with <strong><Mono>p=0.00016</Mono></strong>; we also report failures transparently (stability variance not significant).
@@ -2219,7 +2273,7 @@ export default function Home({ targetSection }: HomeProps) {
             <div className="rounded-lg border p-3">
               <span className="font-medium text-foreground">Ask:</span> Support a supervised <strong>hardware-in-loop pilot</strong> and <strong>clinician co-design</strong> to finalize deployment policy and fairness safeguards.
             </div>
-            <div className="rounded-lg border p-3">
+            <div className="rounded-lg border p-3 print-hide">
               <span className="font-medium text-foreground">Speaker transitions (hard handoffs):</span> Intro speaker ends with
               {" "}
               <Mono>"I will hand to Methods."</Mono>, Methods speaker ends with <Mono>"Now to Results."</Mono>, Results speaker ends with
@@ -2266,16 +2320,26 @@ export default function Home({ targetSection }: HomeProps) {
           header { display: none !important; }
           button { display: none !important; }
           a { text-decoration: none !important; color: inherit !important; }
-          section { break-inside: auto; page-break-inside: auto; }
+          section { break-inside: auto; page-break-inside: auto; max-width: 100% !important; overflow: visible !important; }
+          [data-slot="card"] { break-inside: auto !important; page-break-inside: auto !important; max-width: 100% !important; overflow: visible !important; }
+          tr { break-inside: avoid !important; page-break-inside: avoid !important; }
           section > div { padding-top: 10px !important; padding-bottom: 10px !important; }
           h1 { font-size: 1.9rem !important; line-height: 1.15 !important; }
           h2 { font-size: 1.35rem !important; line-height: 1.15 !important; }
           h3, h4 { font-size: 1.05rem !important; line-height: 1.15 !important; }
           p, li, td, th { line-height: 1.2 !important; }
+          p, li, div, span { overflow-wrap: anywhere !important; word-break: break-word !important; }
+          td, th { white-space: normal !important; word-break: break-word !important; }
+          .whitespace-nowrap { white-space: normal !important; }
+          .font-mono, code { white-space: normal !important; word-break: break-word !important; }
+          .break-all, .break-words { word-break: break-word !important; overflow-wrap: anywhere !important; }
           .p-3, .p-4, .p-5 { padding: 0.45rem !important; }
           .mt-4, .mt-5, .mt-6, .mt-8 { margin-top: 0.45rem !important; }
           img { max-height: 240px !important; width: auto !important; object-fit: contain !important; }
-          table { font-size: 0.9em !important; }
+          iframe, video { display: none !important; }
+          table { font-size: 0.8em !important; width: 100% !important; table-layout: fixed !important; }
+          th, td { padding: 0.22rem !important; }
+          .print-hide { display: none !important; }
           #hero > .absolute { display: none !important; }
           .scroll-mt-24 { scroll-margin-top: 0 !important; }
         }
