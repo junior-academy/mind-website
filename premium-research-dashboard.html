@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MIND Research Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 20px;
+        --space-6: 24px;
+        --space-8: 32px;
+        --space-10: 40px;
+
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 20px;
+
+        --text-2xs: 12px;
+        --text-xs: 13px;
+        --text-sm: 14px;
+        --text-base: 16px;
+        --text-lg: 20px;
+        --text-xl: 28px;
+        --text-2xl: 34px;
+
+        --bg: #f3f4f6;
+        --bg-elev-1: #ffffff;
+        --bg-elev-2: #fafafa;
+        --bg-elev-3: #f6f7f9;
+        --text: #0f172a;
+        --text-muted: #475569;
+        --text-soft: #64748b;
+        --border: #e2e8f0;
+        --border-strong: #d0d8e4;
+        --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+        --shadow-md: 0 6px 20px rgba(15, 23, 42, 0.05);
+        --accent: #0f766e;
+        --accent-strong: #115e59;
+        --accent-soft: rgba(15, 118, 110, 0.12);
+        --focus: #0f766e;
+      }
+
+      [data-theme="dark"] {
+        --bg: #090b10;
+        --bg-elev-1: #11151b;
+        --bg-elev-2: #0d1218;
+        --bg-elev-3: #121821;
+        --text: #e8edf4;
+        --text-muted: #b8c2d1;
+        --text-soft: #94a3b8;
+        --border: #222c39;
+        --border-strong: #2a3646;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+        --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.3);
+        --accent: #2dd4bf;
+        --accent-strong: #14b8a6;
+        --accent-soft: rgba(45, 212, 191, 0.14);
+        --focus: #2dd4bf;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Manrope", system-ui, -apple-system, sans-serif;
+        font-size: var(--text-base);
+        line-height: 1.45;
+      }
+
+      .app {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 272px 1fr;
+      }
+
+      .sidebar {
+        border-right: 1px solid var(--border);
+        background: linear-gradient(180deg, var(--bg-elev-2), var(--bg-elev-1));
+        padding: var(--space-6) var(--space-4);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-6);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+      }
+
+      .brand-logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: var(--bg-elev-1);
+        border: 1px solid var(--border);
+        display: grid;
+        place-items: center;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .brand-name {
+        font-size: var(--text-sm);
+        font-weight: 800;
+        letter-spacing: 0.01em;
+      }
+
+      .brand-sub {
+        font-size: var(--text-2xs);
+        color: var(--text-soft);
+      }
+
+      .nav-group {
+        display: grid;
+        gap: var(--space-1);
+      }
+
+      .nav-label {
+        font-size: var(--text-2xs);
+        color: var(--text-soft);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 0 0 var(--space-2) 0;
+      }
+
+      .nav-link {
+        border: 1px solid transparent;
+        color: var(--text-muted);
+        background: transparent;
+        border-radius: var(--radius-sm);
+        height: 36px;
+        padding: 0 var(--space-3);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-size: var(--text-sm);
+        font-weight: 600;
+      }
+
+      .nav-link:hover {
+        background: var(--bg-elev-3);
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      .nav-link.active {
+        color: var(--accent-strong);
+        background: var(--accent-soft);
+        border-color: rgba(15, 118, 110, 0.22);
+      }
+
+      .sidebar-foot {
+        margin-top: auto;
+        background: var(--bg-elev-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: var(--space-3);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+        font-size: var(--text-2xs);
+        color: var(--text-soft);
+      }
+
+      .main {
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+      }
+
+      .topbar {
+        height: 64px;
+        border-bottom: 1px solid var(--border);
+        background: color-mix(in srgb, var(--bg-elev-1) 88%, transparent);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 var(--space-6);
+        gap: var(--space-4);
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+      }
+
+      .icon-btn,
+      .btn {
+        height: 36px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--bg-elev-1);
+        color: var(--text);
+        font-size: var(--text-sm);
+        font-weight: 600;
+        padding: 0 var(--space-3);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        cursor: pointer;
+      }
+
+      .icon-btn {
+        width: 36px;
+        padding: 0;
+      }
+
+      .btn.primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .btn:hover,
+      .icon-btn:hover {
+        background: var(--bg-elev-3);
+      }
+
+      .btn.primary:hover {
+        background: var(--accent-strong);
+      }
+
+      .search {
+        min-width: 260px;
+        max-width: 420px;
+        width: 38vw;
+        height: 36px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--bg-elev-1);
+        color: var(--text);
+        padding: 0 var(--space-3);
+        font-size: var(--text-sm);
+      }
+
+      .header {
+        padding: var(--space-6);
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--space-5);
+      }
+
+      .eyebrow {
+        margin: 0;
+        font-size: var(--text-xs);
+        color: var(--text-soft);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: var(--space-2) 0 var(--space-2) 0;
+        font-size: clamp(30px, 4vw, var(--text-2xl));
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+      }
+
+      .header p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: var(--text-sm);
+      }
+
+      .content {
+        padding: 0 var(--space-6) var(--space-6) var(--space-6);
+        display: grid;
+        gap: var(--space-4);
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--space-4);
+      }
+
+      .card {
+        background: linear-gradient(180deg, var(--bg-elev-1), var(--bg-elev-2));
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .kpi-card {
+        padding: var(--space-4);
+      }
+
+      .kpi-label {
+        margin: 0;
+        color: var(--text-soft);
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .kpi-value {
+        margin: var(--space-2) 0 var(--space-1) 0;
+        font-size: 26px;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        font-weight: 800;
+      }
+
+      .kpi-meta {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: var(--text-xs);
+      }
+
+      .grid-main {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: var(--space-4);
+      }
+
+      .panel-head {
+        padding: var(--space-4) var(--space-4) var(--space-2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-3);
+      }
+
+      .panel-title {
+        margin: 0;
+        font-size: var(--text-sm);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-soft);
+      }
+
+      .chart-wrap {
+        padding: 0 var(--space-4) var(--space-4);
+      }
+
+      canvas {
+        width: 100%;
+        height: 280px;
+        display: block;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--bg-elev-1);
+      }
+
+      .legend {
+        display: flex;
+        gap: var(--space-3);
+        margin-top: var(--space-2);
+        font-size: var(--text-xs);
+        color: var(--text-muted);
+      }
+
+      .swatch {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+
+      .layout-bottom {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: var(--space-4);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--text-sm);
+      }
+
+      thead th {
+        text-align: left;
+        color: var(--text-soft);
+        font-size: var(--text-xs);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: var(--space-3) var(--space-4);
+        border-bottom: 1px solid var(--border);
+      }
+
+      tbody td {
+        padding: 10px var(--space-4);
+        border-bottom: 1px solid var(--border);
+        color: var(--text-muted);
+      }
+
+      tbody tr:hover {
+        background: var(--bg-elev-3);
+      }
+
+      .status {
+        font-size: var(--text-xs);
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 2px 8px;
+        display: inline-block;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+      }
+
+      .activity-list {
+        list-style: none;
+        margin: 0;
+        padding: 0 var(--space-4) var(--space-4);
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .activity-item {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--bg-elev-1);
+        padding: var(--space-3);
+      }
+
+      .activity-item h4 {
+        margin: 0;
+        font-size: var(--text-sm);
+      }
+
+      .activity-item p {
+        margin: var(--space-1) 0 0;
+        color: var(--text-muted);
+        font-size: var(--text-xs);
+      }
+
+      .gpu-meter {
+        margin-top: var(--space-2);
+        height: 8px;
+        border-radius: 999px;
+        background: var(--bg-elev-3);
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+
+      .gpu-meter > span {
+        display: block;
+        height: 100%;
+        width: 72%;
+        background: var(--accent);
+      }
+
+      .backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.45);
+      }
+
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+      }
+
+      @media (max-width: 1120px) {
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 940px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: fixed;
+          inset: 0 auto 0 0;
+          width: 280px;
+          transform: translateX(-100%);
+          transition: transform 180ms ease;
+          z-index: 40;
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+        }
+
+        .backdrop.show {
+          display: block;
+          z-index: 30;
+        }
+
+        .grid-main,
+        .layout-bottom {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar {
+          padding: 0 var(--space-4);
+        }
+
+        .header,
+        .content {
+          padding-left: var(--space-4);
+          padding-right: var(--space-4);
+        }
+
+        .search {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="backdrop" id="backdrop"></div>
+    <div class="app">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="2.5" y="2.5" width="19" height="19" rx="5" stroke="currentColor" stroke-width="1.5" />
+              <path d="M6 15V9h2.1l2 2.95L12.1 9H14v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M17.5 9.25v5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-name">MIND Ops</div>
+            <div class="brand-sub">Research Platform</div>
+          </div>
+        </div>
+
+        <nav class="nav-group" aria-label="Primary">
+          <p class="nav-label">Overview</p>
+          <a class="nav-link active" href="#">Dashboard</a>
+          <a class="nav-link" href="#">Experiments</a>
+          <a class="nav-link" href="#">Validation</a>
+          <a class="nav-link" href="#">Models</a>
+          <a class="nav-link" href="#">Compute</a>
+        </nav>
+
+        <nav class="nav-group" aria-label="Secondary">
+          <p class="nav-label">Management</p>
+          <a class="nav-link" href="#">Datasets</a>
+          <a class="nav-link" href="#">Reports</a>
+          <a class="nav-link" href="#">Settings</a>
+        </nav>
+
+        <div class="sidebar-foot">
+          <div class="mono">Workspace</div>
+          <div style="font-weight: 700; margin-top: 4px">jr-academy / mind-website</div>
+          <div class="mono" style="margin-top: 4px">last sync 3m ago</div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="icon-btn" id="menuBtn" aria-label="Open navigation">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+              </svg>
+            </button>
+            <input class="search" type="search" placeholder="Search experiments, models, logs..." />
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center">
+            <button class="btn" id="themeToggle" aria-label="Toggle color theme">Dark</button>
+            <button class="btn primary">New Run</button>
+          </div>
+        </header>
+
+        <section class="header">
+          <div>
+            <p class="eyebrow">Machine Learning Research Dashboard</p>
+            <h1>Experiment Health & Validation Signal</h1>
+            <p>Compact live view of experiment throughput, validation quality, compute pressure, and leaderboard movement.</p>
+          </div>
+          <div class="card" style="padding: 16px; min-width: 240px">
+            <p class="kpi-label">GPU Cluster Usage</p>
+            <p class="kpi-value" style="font-size: 22px">72%</p>
+            <p class="kpi-meta">4 of 6 A100 nodes active</p>
+            <div class="gpu-meter"><span></span></div>
+          </div>
+        </section>
+
+        <div class="content">
+          <section class="kpis" aria-label="KPI summary">
+            <article class="card kpi-card">
+              <p class="kpi-label">Validation Accuracy</p>
+              <p class="kpi-value">93.8%</p>
+              <p class="kpi-meta">Best fold avg, MIND-v4.2</p>
+            </article>
+            <article class="card kpi-card">
+              <p class="kpi-label">Experiments (24h)</p>
+              <p class="kpi-value">27</p>
+              <p class="kpi-meta">22 completed, 3 running, 2 failed</p>
+            </article>
+            <article class="card kpi-card">
+              <p class="kpi-label">Inference Latency</p>
+              <p class="kpi-value">38ms</p>
+              <p class="kpi-meta">P95 on validation queue</p>
+            </article>
+            <article class="card kpi-card">
+              <p class="kpi-label">Cost / epoch</p>
+              <p class="kpi-value">$41.20</p>
+              <p class="kpi-meta">-6.3% vs previous baseline</p>
+            </article>
+          </section>
+
+          <section class="grid-main" aria-label="Main analytics">
+            <article class="card">
+              <div class="panel-head">
+                <h2 class="panel-title">Validation Accuracy Trend</h2>
+                <span class="mono">last 12 experiments</span>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="trendChart" width="900" height="320" aria-label="Accuracy chart" role="img"></canvas>
+                <div class="legend">
+                  <span><i class="swatch" style="background: var(--accent)"></i> Validation accuracy</span>
+                  <span><i class="swatch" style="background: #64748b"></i> Baseline</span>
+                </div>
+              </div>
+            </article>
+
+            <aside class="card">
+              <div class="panel-head">
+                <h2 class="panel-title">Recent Activity</h2>
+                <span class="mono">live</span>
+              </div>
+              <ul class="activity-list">
+                <li class="activity-item">
+                  <h4>exp_742 finished</h4>
+                  <p>CV mean improved to 0.938 on BNCI2014_001.</p>
+                </li>
+                <li class="activity-item">
+                  <h4>scheduler action</h4>
+                  <p>Auto-paused low-priority run after GPU threshold exceeded.</p>
+                </li>
+                <li class="activity-item">
+                  <h4>model registry</h4>
+                  <p>MIND-v4.2 promoted to candidate tier.</p>
+                </li>
+                <li class="activity-item">
+                  <h4>alert resolved</h4>
+                  <p>Data drift warning cleared after feature normalization patch.</p>
+                </li>
+              </ul>
+            </aside>
+          </section>
+
+          <section class="layout-bottom" aria-label="Leaderboard and experiment queue">
+            <article class="card">
+              <div class="panel-head">
+                <h2 class="panel-title">Model Leaderboard</h2>
+                <span class="mono">sorted by validation score</span>
+              </div>
+              <div style="overflow: auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Model</th>
+                      <th>Dataset</th>
+                      <th>Val Acc</th>
+                      <th>P95 Latency</th>
+                      <th>Params</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>MIND-v4.2</td>
+                      <td>BNCI2014_001</td>
+                      <td>0.938</td>
+                      <td>38ms</td>
+                      <td>12.4M</td>
+                      <td><span class="status">Candidate</span></td>
+                    </tr>
+                    <tr>
+                      <td>MIND-v4.1</td>
+                      <td>BNCI2014_001</td>
+                      <td>0.926</td>
+                      <td>34ms</td>
+                      <td>12.4M</td>
+                      <td><span class="status">Stable</span></td>
+                    </tr>
+                    <tr>
+                      <td>Ensemble-RF-LS</td>
+                      <td>IIIa</td>
+                      <td>0.891</td>
+                      <td>42ms</td>
+                      <td>8.1M</td>
+                      <td><span class="status">Review</span></td>
+                    </tr>
+                    <tr>
+                      <td>Compact-CSPNet</td>
+                      <td>PhysionetMI</td>
+                      <td>0.873</td>
+                      <td>27ms</td>
+                      <td>4.7M</td>
+                      <td><span class="status">Stable</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <aside class="card">
+              <div class="panel-head">
+                <h2 class="panel-title">Experiment Queue</h2>
+                <span class="mono">next 6h</span>
+              </div>
+              <ul class="activity-list">
+                <li class="activity-item">
+                  <h4>exp_743 · pending</h4>
+                  <p>Hyperparameter sweep: lr and CSP bands.</p>
+                </li>
+                <li class="activity-item">
+                  <h4>exp_744 · running</h4>
+                  <p>Cross-site robustness test on unseen subject blocks.</p>
+                </li>
+                <li class="activity-item">
+                  <h4>exp_745 · queued</h4>
+                  <p>Ablation without temporal smoothing layer.</p>
+                </li>
+              </ul>
+            </aside>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      (function () {
+        const root = document.documentElement;
+        const themeToggle = document.getElementById("themeToggle");
+        const menuBtn = document.getElementById("menuBtn");
+        const sidebar = document.getElementById("sidebar");
+        const backdrop = document.getElementById("backdrop");
+
+        const saved = localStorage.getItem("mind-theme");
+        if (saved === "dark" || saved === "light") {
+          root.setAttribute("data-theme", saved);
+        }
+
+        function syncThemeButton() {
+          const isDark = root.getAttribute("data-theme") === "dark";
+          themeToggle.textContent = isDark ? "Light" : "Dark";
+        }
+
+        function toggleTheme() {
+          const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          root.setAttribute("data-theme", next);
+          localStorage.setItem("mind-theme", next);
+          syncThemeButton();
+          drawChart();
+        }
+
+        function openSidebar() {
+          sidebar.classList.add("open");
+          backdrop.classList.add("show");
+        }
+
+        function closeSidebar() {
+          sidebar.classList.remove("open");
+          backdrop.classList.remove("show");
+        }
+
+        themeToggle.addEventListener("click", toggleTheme);
+        menuBtn.addEventListener("click", openSidebar);
+        backdrop.addEventListener("click", closeSidebar);
+
+        function cssVar(name) {
+          return getComputedStyle(root).getPropertyValue(name).trim();
+        }
+
+        function drawChart() {
+          const canvas = document.getElementById("trendChart");
+          const ctx = canvas.getContext("2d");
+          const w = canvas.width;
+          const h = canvas.height;
+          const pad = { top: 24, right: 18, bottom: 30, left: 44 };
+          const data = [0.881, 0.892, 0.904, 0.899, 0.911, 0.919, 0.922, 0.918, 0.929, 0.931, 0.934, 0.938];
+          const baseline = 0.905;
+
+          const bg = cssVar("--bg-elev-1");
+          const border = cssVar("--border");
+          const grid = cssVar("--border");
+          const text = cssVar("--text-soft");
+          const accent = cssVar("--accent");
+          const baselineColor = "#64748b";
+
+          ctx.clearRect(0, 0, w, h);
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+          ctx.strokeStyle = border;
+          ctx.strokeRect(0.5, 0.5, w - 1, h - 1);
+
+          const minY = 0.86;
+          const maxY = 0.95;
+          const chartW = w - pad.left - pad.right;
+          const chartH = h - pad.top - pad.bottom;
+
+          function xAt(i) {
+            return pad.left + (i * chartW) / (data.length - 1);
+          }
+
+          function yAt(v) {
+            return pad.top + ((maxY - v) / (maxY - minY)) * chartH;
+          }
+
+          ctx.font = "12px IBM Plex Mono, monospace";
+          ctx.fillStyle = text;
+          ctx.strokeStyle = grid;
+          ctx.lineWidth = 1;
+
+          for (let i = 0; i < 4; i++) {
+            const v = minY + ((maxY - minY) * i) / 3;
+            const y = yAt(v);
+            ctx.beginPath();
+            ctx.moveTo(pad.left, y);
+            ctx.lineTo(w - pad.right, y);
+            ctx.stroke();
+            ctx.fillText(v.toFixed(3), 6, y + 4);
+          }
+
+          ctx.strokeStyle = baselineColor;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(pad.left, yAt(baseline));
+          ctx.lineTo(w - pad.right, yAt(baseline));
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.strokeStyle = accent;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          data.forEach((v, i) => {
+            const x = xAt(i);
+            const y = yAt(v);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+
+          ctx.fillStyle = accent;
+          data.forEach((v, i) => {
+            const x = xAt(i);
+            const y = yAt(v);
+            ctx.beginPath();
+            ctx.arc(x, y, 2.8, 0, Math.PI * 2);
+            ctx.fill();
+          });
+
+          ctx.fillStyle = text;
+          ctx.font = "11px IBM Plex Mono, monospace";
+          for (let i = 0; i < data.length; i += 2) {
+            ctx.fillText("e" + (731 + i), xAt(i) - 10, h - 10);
+          }
+        }
+
+        window.addEventListener("resize", drawChart);
+        syncThemeButton();
+        drawChart();
+      })();
+    </script>
+  </body>
+</html>
