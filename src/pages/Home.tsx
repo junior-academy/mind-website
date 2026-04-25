@@ -5,7 +5,7 @@ M.I.N.D. Milestone 4 — Design System (Bioinformatics Blueprint)
 - Motion: only fade/stagger reveals; no distracting effects
 */
 
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import {
@@ -196,6 +196,24 @@ export default function Home({ targetSection }: HomeProps) {
       document.getElementById(targetSection)?.scrollIntoView({ behavior: "smooth" });
     }
   }, [targetSection]);
+
+  const handleDownloadPdf = useCallback(async () => {
+    try {
+      const response = await fetch(`/mind-pdf.pdf?v=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error("Failed to fetch PDF");
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = "mind-pdf.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch {
+      window.open("/mind-pdf.pdf", "_blank", "noopener,noreferrer");
+    }
+  }, []);
 
   const nav = useMemo(
     () => [
@@ -2272,16 +2290,14 @@ export default function Home({ targetSection }: HomeProps) {
 
           <Card>
             <CardHeader>
-              <CardTitle>Print / export</CardTitle>
+              <CardTitle>Download PDF</CardTitle>
               <CardDescription>Download the finalized slide deck PDF.</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
               <p>Use the direct download below for the finalized version.</p>
-              <Button asChild variant="outline" className="gap-2">
-                <a href="/mind-pdf.pdf" download>
-                  Download Final PDF
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                </a>
+              <Button variant="outline" className="gap-2" onClick={handleDownloadPdf}>
+                Download Final PDF
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </Button>
             </CardContent>
           </Card>
