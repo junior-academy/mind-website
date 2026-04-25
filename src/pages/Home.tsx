@@ -1881,6 +1881,33 @@ export default function Home({ targetSection }: HomeProps) {
             </CardContent>
           </Card>
         </div>
+
+        <div className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Live Dashboard Demo (Embedded)</CardTitle>
+              <CardDescription>
+                Embedded live view from <Mono>https://m-i-n-d-dashboard.vercel.app/</Mono>
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="rounded-xl border bg-muted/40 p-3 sm:p-4">
+                <iframe
+                  src={LINKS.dashboard}
+                  title="M.I.N.D Dashboard Demo"
+                  className="w-full h-[760px] rounded-lg border bg-background"
+                  loading="lazy"
+                />
+              </div>
+              <div className="text-sm text-muted-foreground">
+                If embedding is blocked by browser or deployment headers, open the live dashboard directly:{" "}
+                <a className="underline underline-offset-2" href={LINKS.dashboard} target="_blank" rel="noreferrer">
+                  {LINKS.dashboard}
+                </a>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </Section>
 
       {/* Slide 16 */}
