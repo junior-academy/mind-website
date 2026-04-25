@@ -2156,7 +2156,7 @@ export default function Home({ targetSection }: HomeProps) {
           <CardContent className="text-sm text-muted-foreground">
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Problem:</strong> unsafe false activations can make assistive BCI control clinically risky.</li>
-              <li><strong>Innovation:</strong> safety-constrained threshold policy (wrong-fire "<=" alpha) with experimental debounced control on top of the ensemble.</li>
+              <li><strong>Innovation:</strong> safety-constrained threshold policy (wrong-fire ≤ alpha) with experimental debounced control on top of the ensemble.</li>
               <li><strong>Evidence:</strong> locked-threshold primary result shows acted-on lift (delta <Mono>+0.156</Mono>, <Mono>p=0.00016</Mono>), with reported coverage (<Mono>0.816</Mono>), kappa (<Mono>0.550</Mono>), and policy compute benchmark (<Mono>1.324 us/trial</Mono>).</li>
               <li><strong>Limit:</strong> mixed PhysionetMI transfer and no confirmed variance reduction at locked threshold.</li>
               <li><strong>Ask:</strong> support for hardware-in-loop pilot and clinician co-design to finalize deployment policy.</li>
