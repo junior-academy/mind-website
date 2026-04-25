@@ -2110,10 +2110,30 @@ export default function Home({ targetSection }: HomeProps) {
       {/* Print styling */}
       <style>{`
         @media print {
+          @page {
+            size: Letter portrait;
+            margin: 0.35in;
+          }
+
+          html, body {
+            font-size: 10.5px !important;
+            line-height: 1.2 !important;
+          }
+
           header { display: none !important; }
           button { display: none !important; }
           a { text-decoration: none !important; color: inherit !important; }
-          section { break-inside: avoid; }
+          section { break-inside: auto; page-break-inside: auto; }
+          section > div { padding-top: 10px !important; padding-bottom: 10px !important; }
+          h1 { font-size: 1.9rem !important; line-height: 1.15 !important; }
+          h2 { font-size: 1.35rem !important; line-height: 1.15 !important; }
+          h3, h4 { font-size: 1.05rem !important; line-height: 1.15 !important; }
+          p, li, td, th { line-height: 1.2 !important; }
+          .p-3, .p-4, .p-5 { padding: 0.45rem !important; }
+          .mt-4, .mt-5, .mt-6, .mt-8 { margin-top: 0.45rem !important; }
+          img { max-height: 240px !important; width: auto !important; object-fit: contain !important; }
+          table { font-size: 0.9em !important; }
+          #hero > .absolute { display: none !important; }
           .scroll-mt-24 { scroll-margin-top: 0 !important; }
         }
       `}</style>
