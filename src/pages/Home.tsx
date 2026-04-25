@@ -1475,7 +1475,7 @@ export default function Home({ targetSection }: HomeProps) {
               <TableHeader>
                 <TableRow>
                   <TableHead>Existing approach</TableHead>
-                  <TableHead>Your approach</TableHead>
+                  <TableHead>Our approach</TableHead>
                   <TableHead>Proof</TableHead>
                 </TableRow>
               </TableHeader>
