@@ -1900,7 +1900,8 @@ export default function Home({ targetSection }: HomeProps) {
                 />
               </div>
               <div className="text-sm text-muted-foreground">
-                If embedding is blocked by browser or deployment headers, open the live dashboard directly:{" "}
+                If you cannot view the embedded Pygame module demo video properly (or embedding is blocked by browser/deployment headers),
+                open the live dashboard directly:{" "}
                 <a className="underline underline-offset-2" href={LINKS.dashboard} target="_blank" rel="noreferrer">
                   {LINKS.dashboard}
                 </a>
