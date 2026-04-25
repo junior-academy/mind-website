@@ -263,6 +263,36 @@ export default function Home({ targetSection }: HomeProps) {
     [],
   );
 
+  const externalValidationPlanRows = useMemo(
+    () => [
+      {
+        step: "Clinician outreach packet finalized (one-page brief + dashboard link + safety notes)",
+        owner: "Kevin Zhou + Ishani Singh",
+        target: "April 29, 2026",
+        evidence: "Packet PDF + outreach email template in repo/docs",
+      },
+      {
+        step: "First clinician feedback call (structured 20-minute interview)",
+        owner: "Mayu Kanai + Habiba Hisham",
+        target: "May 6, 2026",
+        evidence: "Meeting notes + action items with timestamp",
+      },
+      {
+        step: "Lab/rehab org pilot-interest requests sent (minimum 3 targets)",
+        owner: "Mohammad Yamout + Joshua Zhuravskiy",
+        target: "May 10, 2026",
+        evidence: "Outreach log with recipient + status",
+      },
+      {
+        step: "External validation checkpoint published",
+        owner: "Entire team (mentor review)",
+        target: "May 17, 2026",
+        evidence: "Public status slide with responses received / pending / declined",
+      },
+    ],
+    [],
+  );
+
   const lockedThresholdModelStats = useMemo(
     () => [
       {
@@ -462,6 +492,11 @@ export default function Home({ targetSection }: HomeProps) {
                   <Link href={`/${n.id}`}>{n.label}</Link>
                 </Button>
               ))}
+              <Button variant="ghost" size="sm" asChild className="justify-start h-8 text-xs font-medium">
+                <a href={LINKS.dashboard} target="_blank" rel="noreferrer">
+                  Live Demo
+                </a>
+              </Button>
             </nav>
           </div>
 
@@ -507,6 +542,11 @@ export default function Home({ targetSection }: HomeProps) {
                   <Link href={`/${n.id}`}>{n.label}</Link>
                 </Button>
               ))}
+              <Button variant="ghost" size="sm" asChild className="h-8 text-xs text-muted-foreground hover:text-foreground">
+                <a href={LINKS.dashboard} target="_blank" rel="noreferrer">
+                  Live Demo
+                </a>
+              </Button>
             </nav>
 
             <div className="flex items-center gap-2">
@@ -526,6 +566,11 @@ export default function Home({ targetSection }: HomeProps) {
                           <Link href={`/${n.id}`}>{n.label}</Link>
                         </Button>
                       ))}
+                      <Button variant="ghost" asChild className="justify-start">
+                        <a href={LINKS.dashboard} target="_blank" rel="noreferrer">
+                          Live Demo
+                        </a>
+                      </Button>
                     </div>
                     <Separator className="my-4" />
                     <div className="text-xs text-muted-foreground">Tip: the site is structured as Slides 1–19.</div>
@@ -644,20 +689,20 @@ export default function Home({ targetSection }: HomeProps) {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
               <p>
-                In M.I.N.D., Functional Electrical Stimulation (FES) is the bridge between intention and movement. When a
+                In M.I.N.D., <strong>Functional Electrical Stimulation (FES)</strong> is the bridge between intention and movement. When a
                 user intends a movement and assisted movement is produced, repeated intention-action loops can support
                 neuroplastic rehabilitation pathways.
               </p>
               <p>
-                In the M.I.N.D. system, Functional Electrical Stimulation (FES) is the bridge between intention and movement.
+                In the M.I.N.D. system, <strong>Functional Electrical Stimulation (FES)</strong> is the bridge between intention and movement.
                 By pairing intent-driven movement with repeated rehab loops, we aim to support neuroplasticity.
               </p>
               <p>
-                Our design prioritizes stability and safety: when the system is uncertain, it prefers HOLD rather than
+                Our design prioritizes <strong>stability</strong> and <strong>safety</strong>: when the system is uncertain, it prefers <strong>HOLD</strong> rather than
                 risking an unsafe activation.
               </p>
               <p>
-                This is intentionally a low-cost direction and safety-first design stance: we optimize for dependable
+                This is intentionally a <strong>low-cost</strong> direction and <strong>safety-first</strong> design stance: we optimize for dependable
                 behavior under noise, not only headline accuracy.
               </p>
             </CardContent>
@@ -671,7 +716,7 @@ export default function Home({ targetSection }: HomeProps) {
               <CardDescription>Access gaps exist due to equipment, facilitation, and expertise.</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              We report coverage and abstention explicitly so benefits and tradeoffs can be assessed fairly across users.
+              We report <strong>coverage</strong> and <strong>abstention</strong> explicitly so benefits and tradeoffs can be assessed fairly across users.
               Current barriers include device cost, setup burden, and specialist facilitation requirements, which shape how
               quickly communities can benefit.
             </CardContent>
@@ -963,8 +1008,8 @@ export default function Home({ targetSection }: HomeProps) {
       <Section
         id="slide-8"
         eyebrow="Slide 8"
-        title="Evaluation Protocol"
-        subtitle="Leakage-aware within-subject CV; locked confirmatory threshold; exploratory sweep for tradeoffs."
+        title="Methods Integrity"
+        subtitle="Data split, leakage prevention, locked threshold, and confirmatory vs exploratory boundaries."
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card>
@@ -1102,7 +1147,7 @@ export default function Home({ targetSection }: HomeProps) {
         subtitle="Two-model spotlight at locked t* = 0.60: Main LDA+SVM (subj-weights) vs Ablation LDA+SVM+RF (global)."
       >
         <Alert className="mb-4">
-          <AlertTitle>Judge takeaway</AlertTitle>
+          <AlertTitle>Result interpretation</AlertTitle>
           <AlertDescription>
             At the same locked threshold, model choice changes the operating regime: subj-weights gives high coverage,
             while RF-global gives stronger confident-accuracy lift with lower coverage.
@@ -1247,6 +1292,9 @@ export default function Home({ targetSection }: HomeProps) {
                 Confusion matrices identify which MI classes are most frequently confused during committed predictions,
                 guiding targeted feature and controller refinements.
               </p>
+              <div className="text-xs text-muted-foreground">
+                Axes: x = predicted class, y = true class. Sample size: BCI IV 2a committed predictions across <Mono>n=9</Mono> subjects.
+              </div>
             </CardContent>
           </Card>
           <Card>
@@ -1319,6 +1367,9 @@ export default function Home({ targetSection }: HomeProps) {
               <div className="text-xs text-muted-foreground">
                 Locked operating point: <Mono>t* = 0.60</Mono> (confirmatory). Other thresholds are exploratory.
               </div>
+              <div className="text-xs text-muted-foreground">
+                Axes: x = coverage, y = confident accuracy. Sample size: BCI IV 2a, <Mono>n=9</Mono> subjects.
+              </div>
             </CardContent>
           </Card>
           <Card>
@@ -1332,6 +1383,9 @@ export default function Home({ targetSection }: HomeProps) {
                 alt="Primary dataset paired t-test p-value vs threshold"
                 className="w-full rounded-lg border bg-background"
               />
+              <div className="mt-3 text-xs text-muted-foreground">
+                Axes: x = threshold, y = paired t-test p-value. Sample size: BCI IV 2a, <Mono>n=9</Mono> subjects.
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -1452,6 +1506,9 @@ export default function Home({ targetSection }: HomeProps) {
                   alt="BNCI2014_001 paired t-test p-value vs threshold"
                   className="w-full rounded-lg border bg-background"
                 />
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Axes: x = threshold, y = paired t-test p-value. Sample size: BNCI2014_001, <Mono>n=10</Mono> subjects.
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -1648,11 +1705,11 @@ export default function Home({ targetSection }: HomeProps) {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               <ul className="list-disc pl-5 space-y-2">
-                <li>Fewer unsafe activations (safety first).</li>
-                <li>Low fatigue and predictable behavior.</li>
-                <li>Practical setup time and understandable failure modes.</li>
-                <li>Policy preference: HOLD over unsafe movement.</li>
-                <li>Benefit focus: people with Parkinson's disease, ALS, stroke, and spinal cord injury contexts.</li>
+                <li><strong>Fewer unsafe activations</strong> (safety first).</li>
+                <li><strong>Low fatigue</strong> and predictable behavior.</li>
+                <li><strong>Practical setup time</strong> and understandable failure modes.</li>
+                <li>Policy preference: <strong>HOLD over unsafe movement</strong>.</li>
+                <li>Benefit focus: people with <strong>Parkinson's disease, ALS, stroke, and spinal cord injury</strong> contexts.</li>
               </ul>
             </CardContent>
           </Card>
@@ -1807,10 +1864,10 @@ export default function Home({ targetSection }: HomeProps) {
               <CardDescription>What could block deployment and what we do about it.</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
-              <div className="rounded-lg border p-3">Barrier: hardware cost (especially EEG board). Mitigation: phased procurement, lower-cost board benchmarking, and clinic/shared-device rollout.</div>
-              <div className="rounded-lg border p-3">Barrier: setup/calibration burden. Mitigation: standardized setup checklist and reproducible calibration script.</div>
-              <div className="rounded-lg border p-3">Barrier: confidence-policy ambiguity. Mitigation: clinician co-design sessions for threshold policy.</div>
-              <div className="rounded-lg border p-3">Barrier: domain shift in real settings. Mitigation: non-stationarity stress tests and conservative HOLD behavior.</div>
+              <div className="rounded-lg border p-3">Barrier: <strong>hardware cost</strong> (especially EEG board). Mitigation: phased procurement, lower-cost board benchmarking, and clinic/shared-device rollout.</div>
+              <div className="rounded-lg border p-3">Barrier: <strong>setup/calibration burden</strong>. Mitigation: standardized setup checklist and reproducible calibration script.</div>
+              <div className="rounded-lg border p-3">Barrier: <strong>confidence-policy ambiguity</strong>. Mitigation: clinician co-design sessions for threshold policy.</div>
+              <div className="rounded-lg border p-3">Barrier: <strong>domain shift</strong> in real settings. Mitigation: non-stationarity stress tests and conservative HOLD behavior.</div>
             </CardContent>
           </Card>
         </div>
@@ -1975,6 +2032,38 @@ export default function Home({ targetSection }: HomeProps) {
             </CardContent>
           </Card>
         </div>
+        <div className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Next-step external validation plan (no fabricated artifacts)</CardTitle>
+              <CardDescription>Dated and owner-assigned plan replacing fake quotes/letters.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Step</TableHead>
+                    <TableHead>Owner</TableHead>
+                    <TableHead>Target date</TableHead>
+                    <TableHead>Evidence artifact</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {externalValidationPlanRows.map((row) => (
+                    <TableRow key={row.step}>
+                      <TableCell className="font-medium">{row.step}</TableCell>
+                      <TableCell>{row.owner}</TableCell>
+                      <TableCell>
+                        <Mono>{row.target}</Mono>
+                      </TableCell>
+                      <TableCell>{row.evidence}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
       </Section>
 
       {/* Slide 18 */}
@@ -1991,11 +2080,26 @@ export default function Home({ targetSection }: HomeProps) {
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
             <ul className="list-disc pl-5 space-y-2">
-              <li>Problem: unsafe false activations can make assistive BCI control clinically risky.</li>
-              <li>Innovation: model-agnostic safety-constrained debounced control layer on top of the LDA+SVM+RF ablation ensemble.</li>
-              <li>Evidence: at locked threshold, subj-weights provides high coverage (<Mono>0.816</Mono>) while RF-global provides stronger acted-on lift (delta <Mono>+0.156</Mono>, <Mono>p=0.00016</Mono>), plus strong BNCI external transfer.</li>
-              <li>Limit: mixed PhysionetMI transfer and no confirmed variance reduction at locked threshold.</li>
-              <li>Ask: support for hardware-in-loop pilot and clinician co-design to finalize deployment policy.</li>
+              <li><strong>Problem:</strong> unsafe false activations can make assistive BCI control clinically risky.</li>
+              <li><strong>Innovation:</strong> model-agnostic safety-constrained debounced control layer on top of the LDA+SVM+RF ablation ensemble.</li>
+              <li><strong>Evidence:</strong> at locked threshold, subj-weights provides high coverage (<Mono>0.816</Mono>) while RF-global provides stronger acted-on lift (delta <Mono>+0.156</Mono>, <Mono>p=0.00016</Mono>), with explicit kappa (<Mono>0.550</Mono>) and policy latency (<Mono>1.324 us/trial</Mono>).</li>
+              <li><strong>Limit:</strong> mixed PhysionetMI transfer and no confirmed variance reduction at locked threshold.</li>
+              <li><strong>Ask:</strong> support for hardware-in-loop pilot and clinician co-design to finalize deployment policy.</li>
+            </ul>
+          </CardContent>
+        </Card>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>Final quality pass checklist</CardTitle>
+            <CardDescription>Submission QC completed before export and rehearsal.</CardDescription>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground">
+            <ul className="list-disc pl-5 space-y-2">
+              <li>No <Mono>Pending</Mono> / <Mono>TBD</Mono> placeholders remain in judge-facing slides.</li>
+              <li>Each slide has one headline sentence (subtitle) and one core decision message.</li>
+              <li>Charts include axis context and sample size references (<Mono>n</Mono> labels in captions/tables).</li>
+              <li>Final PDF export route is available via Print / Save as PDF.</li>
+              <li>Speaker transitions are scripted in Slide 19 for timed handoffs.</li>
             </ul>
           </CardContent>
         </Card>
@@ -2100,16 +2204,23 @@ export default function Home({ targetSection }: HomeProps) {
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-3">
             <div className="rounded-lg border p-3">
-              <span className="font-medium text-foreground">Problem:</span> In assistive BCI control, unsafe false activations can harm users and reduce trust.
+              <span className="font-medium text-foreground">Problem:</span> In assistive BCI control, <strong>unsafe false activations</strong> can harm users and reduce trust.
             </div>
             <div className="rounded-lg border p-3">
-              <span className="font-medium text-foreground">Innovation:</span> We add a model-agnostic safety-constrained debounced FIRE/HOLD layer, not just another classifier.
+              <span className="font-medium text-foreground">Innovation:</span> We add a <strong>model-agnostic safety-constrained debounced FIRE/HOLD layer</strong>, not just another classifier.
             </div>
             <div className="rounded-lg border p-3">
-              <span className="font-medium text-foreground">Evidence:</span> At locked threshold, ablation model shows <Mono>delta +0.156</Mono> with <Mono>p=0.00016</Mono>; we also report failures transparently (stability variance not significant).
+              <span className="font-medium text-foreground">Evidence:</span> At locked threshold, ablation model shows <strong><Mono>delta +0.156</Mono></strong> with <strong><Mono>p=0.00016</Mono></strong>; we also report failures transparently (stability variance not significant).
             </div>
             <div className="rounded-lg border p-3">
-              <span className="font-medium text-foreground">Ask:</span> Support a supervised hardware-in-loop pilot and clinician co-design to finalize deployment policy and fairness safeguards.
+              <span className="font-medium text-foreground">Ask:</span> Support a supervised <strong>hardware-in-loop pilot</strong> and <strong>clinician co-design</strong> to finalize deployment policy and fairness safeguards.
+            </div>
+            <div className="rounded-lg border p-3">
+              <span className="font-medium text-foreground">Speaker transitions (hard handoffs):</span> Intro speaker ends with
+              {" "}
+              <Mono>"I will hand to Methods."</Mono>, Methods speaker ends with <Mono>"Now to Results."</Mono>, Results speaker ends with
+              {" "}
+              <Mono>"Now to Viability and Ask."</Mono>, final speaker closes with <Mono>"Thank you, we are ready for questions."</Mono>.
             </div>
           </CardContent>
         </Card>
