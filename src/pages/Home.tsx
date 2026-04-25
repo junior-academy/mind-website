@@ -1576,6 +1576,14 @@ export default function Home({ targetSection }: HomeProps) {
         title="Debounced Controller Metrics"
         subtitle="Controller metrics below are safety/control metrics (not classification accuracy)."
       >
+        <Alert className="mb-4">
+          <AlertTitle>Attempt outcome (reported transparently)</AlertTitle>
+          <AlertDescription>
+            This debounced-controller attempt met the <strong>safety constraint</strong> (<Mono>wrong-fire &lt;= 0.05</Mono>)
+            but was <strong>too conservative</strong> for usability (low coverage and low safe-fire). This is treated as a
+            tuning result, not a failure of the core novelty.
+          </AlertDescription>
+        </Alert>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card>
             <CardHeader>
@@ -1660,6 +1668,11 @@ export default function Home({ targetSection }: HomeProps) {
                     <Mono>toggle=0.009</Mono>
                   </div>
                 </div>
+              </div>
+              <div className="rounded-xl border p-4 text-sm text-muted-foreground">
+                <strong className="text-foreground">Interpretation:</strong> These settings are <strong>safety-feasible</strong>,
+                but they suppress activation too aggressively. Next tuning step is to increase coverage/safe-fire while
+                keeping wrong-fire under <Mono>alpha = 0.05</Mono>.
               </div>
             </CardContent>
           </Card>
