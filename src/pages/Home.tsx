@@ -186,12 +186,12 @@ function ExternalPill({ label, url }: { label: string; url: string }) {
   );
 }
 
-function PendingPill({ label }: { label: string }) {
+function BlackedOutPill({ label }: { label: string }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border bg-muted/40 px-3 py-1.5 text-sm text-muted-foreground">
+    <span className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm text-zinc-300">
       <Link2 className="h-4 w-4 opacity-70" aria-hidden="true" />
       <span className="font-medium">{label}</span>
-      <span className="text-xs">Pending (not added yet)</span>
+      <span className="text-xs opacity-80">Unavailable</span>
     </span>
   );
 }
@@ -215,6 +215,7 @@ export default function Home({ targetSection }: HomeProps) {
       { id: "slide-12", label: "Novelty" },
       { id: "slide-15", label: "Viability" },
       { id: "slide-18", label: "Links" },
+      { id: "slide-19", label: "30-sec Close" },
     ],
     [],
   );
@@ -321,6 +322,121 @@ export default function Home({ targetSection }: HomeProps) {
     [],
   );
 
+  const claimTraceRows = useMemo(
+    () => [
+      {
+        claim: "Locked-threshold lift exists at t*=0.60.",
+        metric: "delta=+0.156, p=0.00016 (Ablation LDA+SVM+RF global)",
+        source: "m.i.n.d/outputs/ensemble_v2/stats_tests_confident_vs_best.csv",
+      },
+      {
+        claim: "Main operating mode prioritizes coverage.",
+        metric: "coverage=0.816 (LDA+SVM subject weights)",
+        source: "m.i.n.d/outputs/ensemble_v2/stats_tests_confident_vs_best.csv",
+      },
+      {
+        claim: "Agreement beyond chance on committed trials.",
+        metric: "kappa=0.550 global @ t=0.60",
+        source: "m.i.n.d/outputs/key_numbers/operational_metrics.csv",
+      },
+      {
+        claim: "Policy compute is fast in software-only benchmark.",
+        metric: "1.324 us/trial (debounced gate loop)",
+        source: "m.i.n.d/outputs/key_numbers/operational_metrics.csv",
+      },
+      {
+        claim: "Variance/stability gain not confirmed.",
+        metric: "Levene p=0.568 at locked threshold",
+        source: "m.i.n.d/outputs/ensemble_v2/stats_tests_confident_vs_best.csv",
+      },
+    ],
+    [],
+  );
+
+  const noveltyComparisonRows = useMemo(
+    () => [
+      {
+        existing: "Classifier-only BCI output; commits whenever top class wins.",
+        ours: "Classifier wrapped by safety-constrained debounced FIRE/HOLD policy.",
+        proof: "Ablation model at t*=0.60: delta +0.156, p=0.00016.",
+      },
+      {
+        existing: "Optimized for accuracy only.",
+        ours: "Explicit objective: maximize safe-fire subject to wrong-fire <= alpha.",
+        proof: "Debounced grids report wrong-fire, safe-fire, and toggle metrics.",
+      },
+      {
+        existing: "Model-specific safety logic.",
+        ours: "Model-agnostic control layer (no retraining required).",
+        proof: "Same policy framework applied across equal/subj/global ensembles.",
+      },
+    ],
+    [],
+  );
+
+  const deploymentModelRows = useMemo(
+    () => [
+      {
+        role: "Buyer",
+        owner: "Rehab clinics, university labs, or grant-funded pilot programs.",
+      },
+      {
+        role: "Operator",
+        owner: "Trained clinician/research assistant during supervised sessions.",
+      },
+      {
+        role: "Maintainer",
+        owner: "Technical lead + lab engineer for updates, calibration scripts, and safety logs.",
+      },
+    ],
+    [],
+  );
+
+  const costRows = useMemo(
+    () => [
+      {
+        item: "Prototype stack",
+        value: "High (OpenBCI + SBC + actuator hardware); exact BOM maintained in hardware doc.",
+      },
+      {
+        item: "Clinic pilot cost",
+        value: "Lower per-user through shared station model and scheduled supervised sessions.",
+      },
+      {
+        item: "Cost-down path",
+        value: "Benchmark lower-cost EEG options + shared-device deployment + setup automation.",
+      },
+    ],
+    [],
+  );
+
+  const adoptionKpiRows = useMemo(
+    () => [
+      {
+        phase: "Phase 1 (bench pilot)",
+        setup: "<= 20 min median",
+        failure: "<= 5% unsafe-fire per all trials target",
+        training: "<= 2 sessions to stable policy",
+        retention: ">= 80% weekly continuation",
+      },
+      {
+        phase: "Phase 2 (supervised rehab simulation)",
+        setup: "<= 15 min median",
+        failure: "<= 3% unsafe-fire per all trials target",
+        training: "<= 3 sessions across users",
+        retention: ">= 85% completion rate",
+      },
+      {
+        phase: "Phase 3 (multi-site replication)",
+        setup: "<= 15 min median across sites",
+        failure: "<= 3% with site-to-site parity checks",
+        training: "Site onboarding <= 1 week",
+        retention: ">= 85% across sites",
+      },
+    ],
+    [],
+  );
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1600px] lg:grid lg:grid-cols-[248px_minmax(0,1fr)]">
@@ -411,7 +527,7 @@ export default function Home({ targetSection }: HomeProps) {
                       ))}
                     </div>
                     <Separator className="my-4" />
-                    <div className="text-xs text-muted-foreground">Tip: the site is structured as Slides 1–18.</div>
+                    <div className="text-xs text-muted-foreground">Tip: the site is structured as Slides 1–19.</div>
                   </SheetContent>
                 </Sheet>
               </div>
@@ -527,12 +643,21 @@ export default function Home({ targetSection }: HomeProps) {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-3">
               <p>
+                In M.I.N.D., Functional Electrical Stimulation (FES) is the bridge between intention and movement. When a
+                user intends a movement and assisted movement is produced, repeated intention-action loops can support
+                neuroplastic rehabilitation pathways.
+              </p>
+              <p>
                 In the M.I.N.D. system, Functional Electrical Stimulation (FES) is the bridge between intention and movement.
                 By pairing intent-driven movement with repeated rehab loops, we aim to support neuroplasticity.
               </p>
               <p>
                 Our design prioritizes stability and safety: when the system is uncertain, it prefers HOLD rather than
                 risking an unsafe activation.
+              </p>
+              <p>
+                This is intentionally a low-cost direction and safety-first design stance: we optimize for dependable
+                behavior under noise, not only headline accuracy.
               </p>
             </CardContent>
           </Card>
@@ -546,6 +671,8 @@ export default function Home({ targetSection }: HomeProps) {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               We report coverage and abstention explicitly so benefits and tradeoffs can be assessed fairly across users.
+              Current barriers include device cost, setup burden, and specialist facilitation requirements, which shape how
+              quickly communities can benefit.
             </CardContent>
           </Card>
         </div>
@@ -907,6 +1034,10 @@ export default function Home({ targetSection }: HomeProps) {
               <div className="rounded-lg border p-3">
                 Secondary optimized threshold is reported for transparency only and is not used for hypothesis tests.
               </div>
+              <div className="rounded-lg border p-3">
+                Levene variance check is reported at the locked threshold to test the variance claim boundary (not treated as
+                a post-hoc optimization target).
+              </div>
             </CardContent>
           </Card>
 
@@ -927,6 +1058,36 @@ export default function Home({ targetSection }: HomeProps) {
                 Outputs include confidence/coverage tables, effect sizes, CIs, and confusion matrix analysis for committed
                 predictions.
               </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Claim -&gt; metric -&gt; source artifact map</CardTitle>
+              <CardDescription>Every major claim is tied to a metric and a file path.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Claim</TableHead>
+                    <TableHead>Metric</TableHead>
+                    <TableHead>Source artifact</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {claimTraceRows.map((row) => (
+                    <TableRow key={row.claim}>
+                      <TableCell className="font-medium">{row.claim}</TableCell>
+                      <TableCell>{row.metric}</TableCell>
+                      <TableCell>
+                        <Mono>{row.source}</Mono>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </div>
@@ -1101,6 +1262,38 @@ export default function Home({ targetSection }: HomeProps) {
             </CardContent>
           </Card>
         </div>
+        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Missing-metric closure (now reported)</CardTitle>
+              <CardDescription>Kappa and latency are now explicit, traceable, and scoped.</CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground space-y-2">
+              <div className="rounded-lg border p-3">
+                Cohen's kappa (committed trials, global, <Mono>t=0.60</Mono>): <Mono>0.550</Mono>.
+              </div>
+              <div className="rounded-lg border p-3">
+                Cohen's kappa (mean across subjects, committed trials): <Mono>0.530</Mono>.
+              </div>
+              <div className="rounded-lg border p-3">
+                Policy latency (software-only benchmark on precomputed probabilities): <Mono>1.324 us/trial</Mono>.
+              </div>
+              <div className="rounded-lg border p-3">
+                Source: <Mono>m.i.n.d/outputs/key_numbers/operational_metrics.csv</Mono>.
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Latency scope note</CardTitle>
+              <CardDescription>What this latency includes and excludes.</CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              Reported latency is policy-compute latency only (software gate loop on saved probabilities). It does not include
+              EEG acquisition, wireless transport, or actuator hardware delays. Hardware-in-loop latency remains a Phase 1 KPI.
+            </CardContent>
+          </Card>
+        </div>
       </Section>
 
       {/* Slide 10 */}
@@ -1229,6 +1422,14 @@ export default function Home({ targetSection }: HomeProps) {
               </Alert>
 
               <Alert>
+                <AlertTitle>Evaluation boundary</AlertTitle>
+                <AlertDescription>
+                  External datasets receive one locked-threshold pass for confirmatory reporting. Any threshold sweeps on
+                  validation datasets are labeled exploratory and are not used to retro-fit confirmatory claims.
+                </AlertDescription>
+              </Alert>
+
+              <Alert>
                 <AlertTitle>Limitation (dataset shift)</AlertTitle>
                 <AlertDescription>Locked policy does not transfer equally across all datasets.</AlertDescription>
               </Alert>
@@ -1263,6 +1464,34 @@ export default function Home({ targetSection }: HomeProps) {
         title="Novel Safety Layer"
         subtitle="Novel Element: Safety-Constrained Control Layer — Maximize safe-fire subject to wrong-fire ≤ alpha (alpha = 0.05)."
       >
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>Why this is novel vs existing BCIs</CardTitle>
+            <CardDescription>Rubric-ready comparison with explicit evidence.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Existing approach</TableHead>
+                  <TableHead>Your approach</TableHead>
+                  <TableHead>Proof</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {noveltyComparisonRows.map((row) => (
+                  <TableRow key={row.existing}>
+                    <TableCell>{row.existing}</TableCell>
+                    <TableCell>{row.ours}</TableCell>
+                    <TableCell>
+                      <Mono>{row.proof}</Mono>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <Card className="lg:col-span-2">
             <CardHeader>
@@ -1292,9 +1521,15 @@ export default function Home({ targetSection }: HomeProps) {
               </CardTitle>
               <CardDescription>Safety/stability are product constraints.</CardDescription>
             </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              A system that “knows when not to act” can be more deployable than one that is slightly more accurate but
-              triggers unsafe actions.
+            <CardContent className="text-sm text-muted-foreground space-y-3">
+              <p>
+                A system that “knows when not to act” can be more deployable than one that is slightly more accurate but
+                triggers unsafe actions.
+              </p>
+              <div className="rounded-lg border p-3">
+                <div className="font-medium text-foreground">User/co-designer quote status</div>
+                <div>No real interview quote has been collected yet. We will not fabricate quotes; this remains an open evidence task.</div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -1424,27 +1659,58 @@ export default function Home({ targetSection }: HomeProps) {
           <Card>
             <CardHeader>
               <CardTitle>Equity + sustainability metrics</CardTitle>
-              <CardDescription>Concrete community, equity, and scaling targets.</CardDescription>
+              <CardDescription>Measured plan with pass/fail thresholds.</CardDescription>
             </CardHeader>
-            <CardContent className="text-sm text-muted-foreground space-y-3">
-              <div className="rounded-lg border p-3">
-                Local community impact target:
-                report coverage, wrong-fire rate, and safe-fire rate for each participant group in pilot clinics.
-              </div>
-              <div className="rounded-lg border p-3">
-                Equity target:
-                keep subgroup safety disparity (wrong-fire gap between cohorts) within a predefined tolerance band.
-              </div>
-              <div className="rounded-lg border p-3">
-                Access target:
-                reduce effective cost over time by validating lower-cost acquisition options and shared-equipment
-                deployment models for low-resource schools and clinics.
-              </div>
-              <div className="rounded-lg border p-3">
-                Scale target:
-                single-site supervised pilot followed by multi-site replication with published fairness and safety summary
-                tables at each stage.
-              </div>
+            <CardContent className="text-sm text-muted-foreground">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Metric</TableHead>
+                    <TableHead>Threshold (pass/fail)</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium">Subgroup wrong-fire disparity</TableCell>
+                    <TableCell>
+                      <Mono>|gap| &lt;= 0.02</Mono>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Subgroup safe-fire parity</TableCell>
+                    <TableCell>
+                      <Mono>|gap| &lt;= 0.05</Mono>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Low-resource access readiness</TableCell>
+                    <TableCell>
+                      Shared-device deployment available + setup guide published
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Cost ceiling target</TableCell>
+                    <TableCell>
+                      Pilot station cost trend decreases each phase
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Scale responsibly roadmap (guardrails + governance)</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Phase gate review before each scale step: safety, fairness, and reproducibility sign-off required.</li>
+                <li>Publish per-site fairness and safety summary tables at each replication milestone.</li>
+                <li>Maintain incident log for unsafe-fire events and threshold-policy updates.</li>
+                <li>Require clinician-supervised operation during early deployment phases.</li>
+              </ul>
             </CardContent>
           </Card>
         </div>
@@ -1457,6 +1723,54 @@ export default function Home({ targetSection }: HomeProps) {
         title="Commercial Viability + Deployment"
         subtitle="OpenBCI to Raspberry Pi to simulated/real actuator/FES loop, with phased pilot design, adoption barriers, and measurable KPIs."
       >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Deployment model (who buys, runs, maintains)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Owner</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {deploymentModelRows.map((row) => (
+                    <TableRow key={row.role}>
+                      <TableCell className="font-medium">{row.role}</TableCell>
+                      <TableCell>{row.owner}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Cost model</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Cost category</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {costRows.map((row) => (
+                    <TableRow key={row.item}>
+                      <TableCell className="font-medium">{row.item}</TableCell>
+                      <TableCell>{row.value}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <Card className="lg:col-span-2">
             <CardHeader>
@@ -1475,6 +1789,10 @@ export default function Home({ targetSection }: HomeProps) {
                 Commercial viability comes from a safety-first wrapper that can be applied across models and improved without
                 requiring expensive retraining pipelines.
               </p>
+              <div className="rounded-lg border p-3">
+                Realization path: the core pipeline is buildable with existing components; the largest remaining step is
+                robust, low-cost hardware integration at clinic reliability standards.
+              </div>
               <div className="rounded-lg border p-3">
                 Current hardware reality: OpenBCI Ganglion pricing substantially raises prototype cost. Our near-term path
                 is supervised pilot deployment first, then cost-down through alternative EEG hardware evaluation and shared
@@ -1523,6 +1841,28 @@ export default function Home({ targetSection }: HomeProps) {
                   ))}
                 </TableBody>
               </Table>
+              <Table className="mt-4">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Phase</TableHead>
+                    <TableHead>Setup time</TableHead>
+                    <TableHead>Failure target</TableHead>
+                    <TableHead>Training time</TableHead>
+                    <TableHead>Retention</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {adoptionKpiRows.map((row) => (
+                    <TableRow key={row.phase}>
+                      <TableCell className="font-medium">{row.phase}</TableCell>
+                      <TableCell>{row.setup}</TableCell>
+                      <TableCell>{row.failure}</TableCell>
+                      <TableCell>{row.training}</TableCell>
+                      <TableCell>{row.retention}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
           <Card>
@@ -1536,6 +1876,7 @@ export default function Home({ targetSection }: HomeProps) {
                 <ExternalPill label="Dashboard" url={LINKS.dashboard} />
                 <ExternalPill label="GitHub Repo" url={LINKS.githubRepo} />
               </div>
+              <div className="rounded-lg border p-3">Interest letters status: none received yet.</div>
             </CardContent>
           </Card>
         </div>
@@ -1552,12 +1893,14 @@ export default function Home({ targetSection }: HomeProps) {
           <CardHeader>
             <CardTitle>Limitations</CardTitle>
           </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
+            <CardContent className="text-sm text-muted-foreground">
             <ul className="list-disc pl-5 space-y-2">
               <li>No real patient trials yet (current results are from regulated benchmark datasets).</li>
               <li>No significant variance reduction at locked threshold <Mono>t* = 0.60</Mono>.</li>
+              <li>What failed: Levene stability check at locked threshold was not significant (<Mono>p=0.568</Mono>), so we cannot claim meaningfully larger stability.</li>
               <li>Dataset shift in PhysionetMI reduces transfer performance under the locked policy.</li>
               <li>IIIa sample size is small (<Mono>n=3</Mono>), so tests are underpowered; effect sizes and CIs are emphasized.</li>
+              <li>EEG remains vulnerable to noise sources (blinks, muscle activity, motion artifacts), constraining real-world robustness.</li>
             </ul>
           </CardContent>
         </Card>
@@ -1570,20 +1913,39 @@ export default function Home({ targetSection }: HomeProps) {
         title="Next Steps"
         subtitle="Concrete follow-ups to increase real-world readiness and fairness transparency."
       >
-        <Card>
-          <CardHeader>
-            <CardTitle>Next steps</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Hardware-in-loop latency tests for real-time FIRE/HOLD behavior (OpenBCI to Raspberry Pi to actuator path).</li>
-              <li>Non-stationarity stress testing to simulate real-life shifts in EEG behavior.</li>
-              <li>Clinician and user feedback study to define acceptable confidence-threshold policy.</li>
-              <li>Per-subject coverage and abstention reporting for fairness and benefit targeting.</li>
-              <li>Low-cost deployment package: parts list, setup guide, and reduced compute pathway for clinics/researchers.</li>
-            </ul>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Next steps</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Hardware-in-loop latency tests for real-time FIRE/HOLD behavior (OpenBCI to Raspberry Pi to actuator path).</li>
+                <li>Non-stationarity stress testing to simulate real-life shifts in EEG behavior.</li>
+                <li>Clinician and user feedback study to define acceptable confidence-threshold policy.</li>
+                <li>Per-subject coverage and abstention reporting for fairness and benefit targeting.</li>
+                <li>Low-cost deployment package: parts list, setup guide, and reduced compute pathway for clinics/researchers.</li>
+              </ul>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Execution learnings (team operations)</CardTitle>
+              <CardDescription>Milestone 3 process notes retained for final delivery quality.</CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground space-y-3">
+              <div className="rounded-lg border p-3">
+                Time-zone-aware execution: split into two working blocks to reduce delays and keep ownership clear.
+              </div>
+              <div className="rounded-lg border p-3">
+                Tooling: Git/GitHub for version control and reproducibility; Notion for task decomposition and dependency tracking.
+              </div>
+              <div className="rounded-lg border p-3">
+                Collaboration rule: explicit task boundaries and handoff notes to avoid overlap and preserve momentum in a large team.
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </Section>
 
       {/* Slide 18 */}
@@ -1591,7 +1953,7 @@ export default function Home({ targetSection }: HomeProps) {
         id="slide-18"
         eyebrow="Slide 18"
         title="Call to Action + Links"
-        subtitle="Links below are current and verifiable. Documents are marked pending until uploaded (no fabrication)."
+        subtitle="Links below are current and verifiable. Missing evidence is explicitly logged rather than fabricated."
       >
         <Card className="mb-4">
           <CardHeader>
@@ -1658,8 +2020,8 @@ export default function Home({ targetSection }: HomeProps) {
                     <ExternalPill label="Hardware + Cost Breakdown Doc" url={LINKS.hardwareDoc} />
                     <ExternalPill label="Blender 3D Models (Drive Folder)" url={LINKS.blenderModels} />
                     <ExternalPill label="GitHub Organization" url={LINKS.githubOrg} />
-                    <PendingPill label="Executive Summary doc/PDF" />
-                    <PendingPill label="Combined Reflections doc/PDF" />
+                    <BlackedOutPill label="Executive Summary" />
+                    <BlackedOutPill label="Combined Reflections" />
                   </div>
                 </div>
               </div>
@@ -1669,7 +2031,7 @@ export default function Home({ targetSection }: HomeProps) {
                   <div>
                     <div className="font-medium">Note</div>
                     <div className="text-sm text-muted-foreground">
-                      This website is organized as Slides 1–18 for judge review.
+                      This website is organized as Slides 1–19 for judge review.
                     </div>
                   </div>
                   <Badge variant="secondary" className="text-sm">
@@ -1696,11 +2058,39 @@ export default function Home({ targetSection }: HomeProps) {
         </div>
       </Section>
 
+      {/* Slide 19 */}
+      <Section
+        id="slide-19"
+        eyebrow="Slide 19"
+        title="30-Second Close"
+        subtitle="Problem -> Innovation -> Evidence -> Ask"
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle>Final verbal script (30 seconds)</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground space-y-3">
+            <div className="rounded-lg border p-3">
+              <span className="font-medium text-foreground">Problem:</span> In assistive BCI control, unsafe false activations can harm users and reduce trust.
+            </div>
+            <div className="rounded-lg border p-3">
+              <span className="font-medium text-foreground">Innovation:</span> We add a model-agnostic safety-constrained debounced FIRE/HOLD layer, not just another classifier.
+            </div>
+            <div className="rounded-lg border p-3">
+              <span className="font-medium text-foreground">Evidence:</span> At locked threshold, ablation model shows <Mono>delta +0.156</Mono> with <Mono>p=0.00016</Mono>; we also report failures transparently (stability variance not significant).
+            </div>
+            <div className="rounded-lg border p-3">
+              <span className="font-medium text-foreground">Ask:</span> Support a supervised hardware-in-loop pilot and clinician co-design to finalize deployment policy and fairness safeguards.
+            </div>
+          </CardContent>
+        </Card>
+      </Section>
+
       <footer className="border-t">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">M.I.N.D.</span> — Milestone 4 webpage (Slides 1–18).
+              <span className="font-medium text-foreground">M.I.N.D.</span> — Milestone 4 webpage (Slides 1–19).
             </div>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" asChild className="gap-2">
