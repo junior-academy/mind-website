@@ -1299,47 +1299,23 @@ export default function Home({ targetSection }: HomeProps) {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Coverage consistency note</CardTitle>
-              <CardDescription>Why dashboard coverage percentages can differ.</CardDescription>
+              <CardTitle>Coverage + latency scope note</CardTitle>
+              <CardDescription>
+                Why dashboard coverage percentages can differ, and what latency this report includes.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              Coverage values differ when the metric or model changes. In this slide we use classifier coverage from{" "}
-              <Mono>stats_tests_confident_vs_best.csv</Mono> for{" "}
-              <Mono>Ablation: LDA+SVM+RF (global)</Mono> at <Mono>t* = 0.60</Mono> (<Mono>0.464</Mono>). Debounced-controller
-              coverage uses a stricter FIRE/HOLD gate and is expected to be lower, and other ensemble variants can report
-              different coverage at the same threshold.
-            </CardContent>
-          </Card>
-        </div>
-        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Missing-metric closure (now reported)</CardTitle>
-              <CardDescription>Kappa and latency are now explicit, traceable, and scoped.</CardDescription>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground space-y-2">
-              <div className="rounded-lg border p-3">
-                Cohen's kappa (committed trials, global, <Mono>t=0.60</Mono>): <Mono>0.550</Mono>.
-              </div>
-              <div className="rounded-lg border p-3">
-                Cohen's kappa (mean across subjects, committed trials): <Mono>0.530</Mono>.
-              </div>
-              <div className="rounded-lg border p-3">
-                Policy latency (software-only benchmark on precomputed probabilities): <Mono>1.324 us/trial</Mono>.
-              </div>
-              <div className="rounded-lg border p-3">
-                Source: <Mono>m.i.n.d/outputs/key_numbers/operational_metrics.csv</Mono>.
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Latency scope note</CardTitle>
-              <CardDescription>What this latency includes and excludes.</CardDescription>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              Reported latency is policy-compute latency only (software gate loop on saved probabilities). It does not include
-              EEG acquisition, wireless transport, or actuator hardware delays. Hardware-in-loop latency remains a Phase 1 KPI.
+            <CardContent className="text-sm text-muted-foreground space-y-3">
+              <p>
+                Coverage values differ when the metric or model changes. In this slide we use classifier coverage from{" "}
+                <Mono>stats_tests_confident_vs_best.csv</Mono> for{" "}
+                <Mono>Ablation: LDA+SVM+RF (global)</Mono> at <Mono>t* = 0.60</Mono> (<Mono>0.464</Mono>). Debounced-controller
+                coverage uses a stricter FIRE/HOLD gate and is expected to be lower, and other ensemble variants can report
+                different coverage at the same threshold.
+              </p>
+              <p>
+                Reported latency is policy-compute latency only (software gate loop on saved probabilities). It does not include
+                EEG acquisition, wireless transport, or actuator hardware delays. Hardware-in-loop latency remains a Phase 1 KPI.
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -2086,6 +2062,10 @@ export default function Home({ targetSection }: HomeProps) {
               <li><strong>Limit:</strong> mixed PhysionetMI transfer and no confirmed variance reduction at locked threshold.</li>
               <li><strong>Ask:</strong> support for hardware-in-loop pilot and clinician co-design to finalize deployment policy.</li>
             </ul>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <BlackedOutPill label="Executive Summary" />
+              <ExternalPill label="Combined Reflections" url={LINKS.reflectionsDoc} />
+            </div>
           </CardContent>
         </Card>
         <Card className="mb-4">
