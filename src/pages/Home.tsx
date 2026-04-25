@@ -71,6 +71,7 @@ const LINKS = {
   githubOrg: "https://github.com/junior-academy",
   dashboard: "https://m-i-n-d-dashboard.vercel.app/",
   hardwareDoc: "https://docs.google.com/document/d/1WXulgZgBNPpNRpNQfBF3iQciMAnh06yxOO5ESlmd6mk/edit?tab=t.0",
+  reflectionsDoc: "https://docs.google.com/document/d/1k90IPzWDUX7Z669YRt66vCPSbz5McWVelmLYfWifmHg/edit?tab=t.stdp2u1ha221",
   blenderModels: "https://drive.google.com/drive/folders/1bZ1EHGgcU94LtpbFDijSDXvAwMqezgif",
   bciCompetitionIV: "https://www.bbci.de/competition/iv/",
   bciCompetitionIII: "https://www.bbci.de/competition/iii/",
@@ -587,7 +588,7 @@ export default function Home({ targetSection }: HomeProps) {
             </div>
 
             <h1 className="mt-4 text-3xl sm:text-5xl font-semibold leading-tight">
-              M.I.N.D.: Safety-Constrained Brain-Computer Interface for Reliable Rehabilitation Control
+              M.I.N.D. - Mental Interpretation Network for Decision Making
             </h1>
 
             <p className="mt-4 text-base sm:text-lg text-muted-foreground">
@@ -2021,7 +2022,7 @@ export default function Home({ targetSection }: HomeProps) {
                     <ExternalPill label="Blender 3D Models (Drive Folder)" url={LINKS.blenderModels} />
                     <ExternalPill label="GitHub Organization" url={LINKS.githubOrg} />
                     <BlackedOutPill label="Executive Summary" />
-                    <BlackedOutPill label="Combined Reflections" />
+                    <ExternalPill label="Combined Reflections" url={LINKS.reflectionsDoc} />
                   </div>
                 </div>
               </div>
