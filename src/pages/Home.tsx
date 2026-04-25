@@ -71,6 +71,7 @@ const LINKS = {
   githubOrg: "https://github.com/junior-academy",
   dashboard: "https://m-i-n-d-dashboard.vercel.app/",
   hardwareDoc: "https://docs.google.com/document/d/1WXulgZgBNPpNRpNQfBF3iQciMAnh06yxOO5ESlmd6mk/edit?tab=t.0",
+  executiveSummaryDoc: "https://docs.google.com/document/d/1SbjQLqn3CI-qZ6ezMRBQcGgn1Gh2BoIfuXG2kTw3sLc/edit?tab=t.pzc3xwe73pxb",
   reflectionsDoc: "https://docs.google.com/document/d/1k90IPzWDUX7Z669YRt66vCPSbz5McWVelmLYfWifmHg/edit?tab=t.stdp2u1ha221",
   blenderModels: "https://drive.google.com/drive/folders/1bZ1EHGgcU94LtpbFDijSDXvAwMqezgif",
   bciCompetitionIV: "https://www.bbci.de/competition/iv/",
@@ -184,16 +185,6 @@ function ExternalPill({ label, url }: { label: string; url: string }) {
       <span className="font-medium">{label}</span>
       <ExternalLink className="h-4 w-4 opacity-60 group-hover:opacity-100" aria-hidden="true" />
     </a>
-  );
-}
-
-function BlackedOutPill({ label }: { label: string }) {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm text-zinc-300">
-      <Link2 className="h-4 w-4 opacity-70" aria-hidden="true" />
-      <span className="font-medium">{label}</span>
-      <span className="text-xs opacity-80">Unavailable</span>
-    </span>
   );
 }
 
@@ -1467,9 +1458,8 @@ export default function Home({ targetSection }: HomeProps) {
 
               <Alert>
                 <AlertTitle>Non-PhysioNet external results</AlertTitle>
-                <AlertDescription>
-                  BNCI2014_001 shows a strong signal at the locked threshold (<Mono>p = 0.004</Mono>). IIIa results are
-                  also reported with an explicit p-value (<Mono>p = 0.183</Mono>), but remain underpowered (<Mono>n = 3</Mono>).
+                <AlertDescription className="whitespace-nowrap overflow-x-auto">
+                  BNCI2014_001 shows a strong signal at the locked threshold (<span className="inline"><Mono>p = 0.004</Mono></span>), while IIIa is also reported (<Mono>p = 0.183</Mono>) but remains underpowered (<Mono>n = 3</Mono>).
                 </AlertDescription>
               </Alert>
 
@@ -2097,7 +2087,7 @@ export default function Home({ targetSection }: HomeProps) {
               <li><strong>Ask:</strong> support for hardware-in-loop pilot and clinician co-design to finalize deployment policy.</li>
             </ul>
             <div className="mt-3 flex flex-wrap gap-2">
-              <BlackedOutPill label="Executive Summary" />
+              <ExternalPill label="Executive Summary" url={LINKS.executiveSummaryDoc} />
               <ExternalPill label="Combined Reflections" url={LINKS.reflectionsDoc} />
             </div>
           </CardContent>
@@ -2167,7 +2157,7 @@ export default function Home({ targetSection }: HomeProps) {
                     <ExternalPill label="Hardware + Cost Breakdown Doc" url={LINKS.hardwareDoc} />
                     <ExternalPill label="Blender 3D Models (Drive Folder)" url={LINKS.blenderModels} />
                     <ExternalPill label="GitHub Organization" url={LINKS.githubOrg} />
-                    <BlackedOutPill label="Executive Summary" />
+                    <ExternalPill label="Executive Summary" url={LINKS.executiveSummaryDoc} />
                     <ExternalPill label="Combined Reflections" url={LINKS.reflectionsDoc} />
                   </div>
                 </div>
