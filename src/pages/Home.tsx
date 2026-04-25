@@ -53,7 +53,7 @@ interface HomeProps {
 }
 
 const TEAM = {
-  name: "M.I.N.D. — Mental Interpretation Network for Decision-making",
+  name: "M.I.N.D. — Mental interpretation network for decision making",
   projectNumber: "6857",
   members: [
     "Ishani Singh",
