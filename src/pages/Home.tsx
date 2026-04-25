@@ -1186,7 +1186,7 @@ export default function Home({ targetSection }: HomeProps) {
               <Stat label="Ensemble confident accuracy" value="0.663" hint="Acted-on trials only" />
               <Stat label="Ensemble coverage" value="0.816" hint="81.6% committed-trial rate" />
               <Stat label="Delta (confident - best-single)" value="+0.035" />
-              <Stat label="95% CI" value="[0.006, 0.064]" />
+              <Stat label="Delta 95% CI" value="[0.006, 0.064]" />
               <Stat label="Paired t-test p-value" value="0.024" />
             </CardContent>
           </Card>
@@ -1200,7 +1200,7 @@ export default function Home({ targetSection }: HomeProps) {
               <Stat label="Ensemble confident accuracy" value="0.784" hint="Acted-on trials only" />
               <Stat label="Ensemble coverage" value="0.464" hint="46.4% committed-trial rate" />
               <Stat label="Delta (confident - best-single)" value="+0.156" />
-              <Stat label="95% CI" value="[0.102, 0.210]" />
+              <Stat label="Delta 95% CI" value="[0.102, 0.210]" />
               <Stat label="Paired t-test p-value" value="0.00016" />
             </CardContent>
           </Card>
@@ -1227,7 +1227,7 @@ export default function Home({ targetSection }: HomeProps) {
                     ["Ensemble confident accuracy", "0.663", "0.784"],
                     ["Ensemble coverage", "0.816", "0.464"],
                     ["Delta (confident - best-single)", "+0.035", "+0.156"],
-                    ["95% CI", "[0.006, 0.064]", "[0.102, 0.210]"],
+                    ["Delta 95% CI", "[0.006, 0.064]", "[0.102, 0.210]"],
                     ["Paired t-test p-value", "0.024", "0.00016"],
                   ].map(([m, v1, v2]) => (
                     <TableRow key={m}>
@@ -1263,7 +1263,7 @@ export default function Home({ targetSection }: HomeProps) {
                     <TableHead>Coverage</TableHead>
                     <TableHead>Conf. Acc</TableHead>
                     <TableHead>Delta</TableHead>
-                    <TableHead>95% CI</TableHead>
+                    <TableHead>Delta 95% CI</TableHead>
                     <TableHead>p-value</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -1410,7 +1410,7 @@ export default function Home({ targetSection }: HomeProps) {
                     <TableHead>Delta</TableHead>
                     <TableHead>p</TableHead>
                     <TableHead>d</TableHead>
-                    <TableHead>95% CI</TableHead>
+                    <TableHead>Delta 95% CI</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
