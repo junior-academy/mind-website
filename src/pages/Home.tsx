@@ -1561,12 +1561,14 @@ export default function Home({ targetSection }: HomeProps) {
         id="slide-12"
         eyebrow="Slide 12"
         title="Novel Safety Layer"
-        subtitle="Novel Element: Safety-Constrained Control Layer — Maximize safe-fire subject to wrong-fire ≤ alpha (alpha = 0.05)."
+        subtitle="Novel element: safety-constrained threshold objective (wrong-fire <= alpha); debounced layer is experimental."
       >
         <Card className="mb-4">
           <CardHeader>
             <CardTitle>Why this is novel vs existing BCIs</CardTitle>
-            <CardDescription>Rubric-ready comparison with explicit evidence.</CardDescription>
+            <CardDescription>
+              Novelty claim: policy objective + constraint wrapper is model-agnostic; debouncing is an experimental control add-on.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
@@ -1833,7 +1835,7 @@ export default function Home({ targetSection }: HomeProps) {
         id="slide-15"
         eyebrow="Slide 15"
         title="Commercial Viability + Deployment"
-        subtitle="OpenBCI to Raspberry Pi to simulated/real actuator/FES loop, with phased pilot design, adoption barriers, and measurable KPIs."
+        subtitle="Phased path from OpenBCI to Raspberry Pi to actuator/FES with measurable pilot KPIs."
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
           <Card>
@@ -1900,6 +1902,9 @@ export default function Home({ targetSection }: HomeProps) {
               <p>
                 Commercial viability comes from a safety-first wrapper that can be applied across models and improved without
                 requiring expensive retraining pipelines.
+              </p>
+              <p>
+                Deployable with existing components; the main remaining step is reliability validation, not a new core invention.
               </p>
               <div className="rounded-lg border p-3">
                 Realization path: the core pipeline is buildable with existing components; the largest remaining step is
@@ -2123,7 +2128,7 @@ export default function Home({ targetSection }: HomeProps) {
         id="slide-18"
         eyebrow="Slide 18"
         title="Call to Action + Links"
-        subtitle="Links below are current and verifiable. Missing evidence is explicitly logged rather than fabricated."
+        subtitle="Links are current and verifiable; missing evidence is explicitly logged."
       >
         <Card className="mb-4">
           <CardHeader>
@@ -2133,8 +2138,8 @@ export default function Home({ targetSection }: HomeProps) {
           <CardContent className="text-sm text-muted-foreground">
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Problem:</strong> unsafe false activations can make assistive BCI control clinically risky.</li>
-              <li><strong>Innovation:</strong> model-agnostic safety-constrained debounced control layer on top of the LDA+SVM+RF ablation ensemble.</li>
-              <li><strong>Evidence:</strong> at locked threshold, subj-weights provides high coverage (<Mono>0.816</Mono>) while RF-global provides stronger acted-on lift (delta <Mono>+0.156</Mono>, <Mono>p=0.00016</Mono>), with explicit kappa (<Mono>0.550</Mono>) and policy latency (<Mono>1.324 us/trial</Mono>).</li>
+              <li><strong>Innovation:</strong> safety-constrained threshold policy (wrong-fire "<=" alpha) with experimental debounced control on top of the ensemble.</li>
+              <li><strong>Evidence:</strong> locked-threshold primary result shows acted-on lift (delta <Mono>+0.156</Mono>, <Mono>p=0.00016</Mono>), with reported coverage (<Mono>0.816</Mono>), kappa (<Mono>0.550</Mono>), and policy compute benchmark (<Mono>1.324 us/trial</Mono>).</li>
               <li><strong>Limit:</strong> mixed PhysionetMI transfer and no confirmed variance reduction at locked threshold.</li>
               <li><strong>Ask:</strong> support for hardware-in-loop pilot and clinician co-design to finalize deployment policy.</li>
             </ul>
@@ -2142,6 +2147,40 @@ export default function Home({ targetSection }: HomeProps) {
               <ExternalPill label="Executive Summary" url={LINKS.executiveSummaryDoc} />
               <ExternalPill label="Combined Reflections" url={LINKS.reflectionsDoc} />
             </div>
+          </CardContent>
+        </Card>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>Evidence hierarchy</CardTitle>
+            <CardDescription>How claims are prioritized in this deck.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Tier</TableHead>
+                  <TableHead>Evidence type</TableHead>
+                  <TableHead>Current readout</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">Tier 1 (Primary)</TableCell>
+                  <TableCell>Locked-threshold confirmatory result (<Mono>t* = 0.60</Mono>)</TableCell>
+                  <TableCell>Delta <Mono>+0.156</Mono>, <Mono>p=0.00016</Mono></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Tier 2 (Transfer)</TableCell>
+                  <TableCell>External locked-threshold validation</TableCell>
+                  <TableCell>BNCI positive; PhysionetMI mixed; IIIa underpowered</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Tier 3 (Exploratory)</TableCell>
+                  <TableCell>Threshold sweeps + experimental debounced controller settings</TableCell>
+                  <TableCell>Transparency report only; not used for confirmatory claims</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
         <Card className="mb-4 print-hide">
